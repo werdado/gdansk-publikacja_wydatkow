@@ -93,6 +93,47 @@ Różnice: produkcja nie ma paska wyboru makiet ani przykładów szybkiego wyszu
 
 **Kontrola na fizycznym telefonie nie została wykonana: w środowisku nie ma dostępnego urządzenia.** Model, przeglądarka telefonu i warunki sieci: nie dotyczy / brak pomiaru. Viewport 390 × 844 px pochodzi z desktopowego Chromium headless i nie stanowi pomiaru telefonu. Pozostaje kontrola odbioru wersji mobilnej na urządzeniu; brak telefonu nie blokuje ukończenia kodu i plików statycznych.
 
+## Pakiet statyczny w podkatalogu
+
+Kontrola z 2026-09-09 użyła świeżego `npm run build`, a następnie skopiowała wynik do `/tmp/gdansk-podglad/rejestr/`. Zwykły serwer Node był uruchomiony z katalogiem głównym `/tmp/gdansk-podglad` pod `http://127.0.0.1:4180`; nie ma on przekierowania brakujących plików na `index.html` ani nagłówka `Content-Encoding` dla gzip.
+
+Chromium otworzył `http://127.0.0.1:4180/rejestr/`, a następnie odświeżył tę samą stronę. W obu przypadkach `html[data-ready]` miało wartość `true`, `#count[data-total]` wskazywał `66343`, a tabela miała 100 wierszy. Odpowiedzi HTTP 200 objęły kod strony, CSS, osobny worker, `generated/manifest.json` oraz `records.*.json.gz` i `index.*.json.gz`; wszystkie były odczytane spod prefiksu `/rejestr/`. Serwer zwracał 404 dla nieistniejącego `assets/missing.js`, więc wynik nie pochodził z awaryjnego zwrotu strony głównej.
+
+Wersje artefaktów z tej kontroli:
+
+| Plik | Rozmiar |
+| --- | ---: |
+| `index.html` | 3 966 B |
+| `assets/index-BCvVvOhf.css` | 7 624 B |
+| `assets/index-DAEfrvvi.js` | 9 293 B |
+| `assets/worker-D4Fkauf4.js` | 22 473 B |
+| `generated/manifest.json` | 3 416 B |
+| `generated/records.ecb1865a1975168b.json` | 37 150 709 B |
+| `generated/records.ecb1865a1975168b.json.gz` | 5 205 312 B |
+| `generated/index.52682b4e6d620f31.json` | 14 625 160 B |
+| `generated/index.52682b4e6d620f31.json.gz` | 3 939 871 B |
+
+Łączny rozmiar `dist/` wynosi 60 967 824 B. Kontrola potwierdza działanie relatywnego `base: './'` bez kodowania w adresach nazwy przyszłego repozytorium.
+
+Do odtworzenia kontroli zbuduj stronę, skopiuj całą zawartość `dist/` do `podglad/rejestr/` pod zwykłym serwerem statycznym i otwórz `/rejestr/`. Sprawdź oba wejścia (pierwsze oraz odświeżenie), liczbę 66 343 oraz odpowiedzi dla workera, manifestu i obu plików `.json.gz`. Serwer powinien udostępniać zwykłe bajty gzip, bez własnego `Content-Encoding`.
+
+## Publikacja przez GitHub Pages
+
+Plik [`.github/workflows/pages.yml`](../.github/workflows/pages.yml) jest ręcznie uruchamianym workflow. Po skonfigurowaniu repozytorium na GitHub i wybraniu „GitHub Actions” jako źródła Pages buduje oraz sprawdza stronę, po czym przesyła wyłącznie `dist/` do GitHub Pages. Obecnie nie ma skonfigurowanego zdalnego repozytorium, więc nie wykonano publikacji i nie podano adresu strony.
+
+Kontrola wejść CI (`git ls-files --error-unmatch`) potwierdziła śledzenie 12 plików `data/`, `scripts/dane-poc.ts`, `scripts/przygotuj-strone.ts`, `src/`, `site/`, `vite.site.config.ts` oraz `package-lock.json`. `dist/` i `site/public/generated/` są poprawnie ignorowanymi wynikami budowania; `node_modules/`, POC i skrypty narzędziowe nie są częścią artefaktu Pages.
+
+Końcowa kontrola tego pakietu użyła tej samej kolejności co workflow:
+
+| Polecenie | Wynik |
+| --- | --- |
+| `npm ci` | zainstalowano 23 pakiety; audyt: 0 podatności |
+| `npm test` | 13 testów zaliczonych, 0 błędów; 346,64 ms |
+| `npm run test:site:unit` | 2 testy zaliczone, 0 błędów; 78,36 ms |
+| `npm run build` | przygotowano 66 343 wpisy, kontrola TypeScript przeszła, Vite: 92 ms |
+| `npx playwright install --with-deps chromium` | Chromium i zależności systemowe dostępne; bez nowych pakietów systemowych |
+| `npm run test:site:browser` | 8 testów zaliczonych; 11,2 s |
+
 ## Testy i czułość regresji
 
 Osiem testów przeglądarkowych obejmuje wymagane pięć scenariuszy oraz wysokość wierszy, klawiaturę i liczebności wydziałów, a także skuteczne ponowienie pobrania. Testy korzystają z publicznych kontrolek, `tr.entry-row`, `data-id`, `#count[data-total]`, natywnego dialogu i istniejących atrybutów gotowości. Nie dodano kontrolek debugowania ani zmian w kodzie produkcyjnym.

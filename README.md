@@ -34,6 +34,14 @@ npm run preview
 
 Gotowe pliki są w `dist/`; publikuj cały ten katalog, łącznie z `generated/`. Podgląd zwykle działa pod `http://localhost:4173`. Wyszukiwarka wymaga HTTP lub HTTPS; nie otwieraj pliku HTML bezpośrednio z dysku.
 
+## GitHub Pages
+
+Workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml) uruchamia się wyłącznie ręcznie (`workflow_dispatch`). Po podłączeniu repozytorium do GitHub ustaw w Pages źródło publikacji na „GitHub Actions”, a następnie uruchom workflow z karty Actions. Najpierw wykonuje on `npm ci`, testy jednostkowe, build i testy Chromium, a dopiero potem przekazuje `dist/` do Pages.
+
+Wejściem CI są śledzone pliki `data/`, współdzielony loader `scripts/dane-poc.ts`, źródła `src/` i `site/`, konfiguracja oraz `package-lock.json`. Artefaktem jest wyłącznie `dist/`; nie zawiera on `node_modules`, laboratorium POC ani skryptów narzędziowych. W repozytorium nie ma jeszcze zdalnego adresu, dlatego workflow nie określa ani nie zakłada adresu przyszłej publikacji.
+
+`base: './'` pozwala umieścić gotowy katalog również pod zagnieżdżoną ścieżką. Lokalna kontrola opisana w [weryfikacji strony](docs/weryfikacja-strony.md#pakiet-statyczny-w-podkatalogu) umieszcza `dist/` pod `/rejestr/` i sprawdza wejście oraz odświeżenie, wraz z workerem, manifestem i danymi gzip.
+
 Wpisane słowa i aktywne filtry łączą się przez **AND**: wpis musi spełniać każde kryterium. Można jednocześnie szukać globalnie i w kilku kolumnach. Pomijamy wielkość liter i polskie znaki. W przedmiocie, trybie, rodzaju i nazwie kontrahenta działa tolerancja **jednej edycji od czterech znaków** (profil `one`); zamiana kolejności dwóch liter może wymagać dwóch edycji. Numery umów i nazwy wydziałów są sprawdzane jako fragmenty bez tolerancji literówek. Kilka zaznaczonych wydziałów oznacza dowolny z wybranych wydziałów. Filtry dat obejmują granice zakresu, kwota jest porównywana ściśle (`>` albo `<`). Sortowanie zachowuje filtry, a „Rozwiń wpis” pokazuje wszystkie dziesięć pól i pełny opis.
 
 Weryfikacja lokalna (testy przeglądarkowe wymagają wcześniejszego `npm run build`):
