@@ -1,0 +1,76 @@
+<!doctype html>
+<html lang="pl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Rejestr wydatków Gdańska</title>
+</head>
+<body class="editorial">
+<div class="page">
+<header>
+  <a class="wordmark" href="./"><span class="mark" aria-hidden="true">G.</span> Gdańsk <span>/ otwarte dane</span></a>
+  <a href="#o-danych">O danych ↗</a>
+</header>
+<main>
+  <section class="hero" aria-labelledby="page-title">
+    <div>
+      <p class="eyebrow">GDAŃSK. PUBLICZNE PIENIĄDZE.</p>
+      <h1 id="page-title">Miasto zapisane<br>w wydatkach.</h1>
+      <p class="intro">Rejestr wydatków Gdańska. Wyszukuj i porównuj wpisy z rejestru wydatków z lat 2015–2026.</p>
+    </div>
+    <div class="collection">
+      <span class="collection-label">ZBIÓR ŹRÓDŁOWY</span>
+      <strong><span id="collection-count">—</span><span>wpisy w rejestrze</span></strong>
+      <div><b>2015–2026</b><span>12 publikacji rocznych</span></div>
+      <p>2026: dane do 29 lipca</p>
+    </div>
+  </section>
+  <p id="status" role="status">Wczytywanie danych…</p>
+  <button id="retry" type="button" hidden>Spróbuj ponownie</button>
+  <form id="search-form">
+    <fieldset id="controls" disabled>
+      <legend class="visually-hidden">Wyszukiwanie i filtry</legend>
+      <section class="search-area" aria-label="Wyszukiwanie">
+      <div class="search-line">
+        <label class="grow">Szukaj we wszystkich polach tekstowych
+          <span class="search-box"><span aria-hidden="true">⌕</span><input id="query" type="search" placeholder="np. remont szkoły" aria-describedby="search-note"></span>
+        </label>
+        <button type="submit">Szukaj</button>
+      </div>
+      <p id="search-note" class="note">Każde słowo musi pasować. Pomijamy wielkość liter i polskie znaki. W opisach, trybach, rodzajach i nazwach kontrahentów uwzględniamy jedną literówkę od czterech znaków.</p>
+      </section>
+      <section class="register" aria-label="Rejestr wydatków">
+      <div class="table-toolbar">
+        <div><p class="eyebrow">REJESTR WYDATKÓW</p><h2 id="count" aria-live="polite"></h2></div>
+        <button id="clear" type="button" class="secondary">Wyczyść filtry</button>
+      </div>
+      <p class="scroll-hint">Filtruj pod nagłówkami · Przesuń tabelę, aby zobaczyć pozostałe kolumny →</p>
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Wyniki — tabela przewijana pionowo i poziomo">
+        <table>
+          <caption class="visually-hidden">Wpisy rejestru wydatków</caption>
+          <thead><tr id="headings"></tr><tr id="filter-head"></tr></thead>
+          <tbody id="results" aria-busy="true"></tbody>
+        </table>
+      </div>
+      <p id="empty" hidden>Brak wpisów spełniających wszystkie warunki.</p>
+      <div class="table-foot"><button id="more" type="button" hidden>Pokaż kolejne 100 wpisów</button></div>
+      </section>
+    </fieldset>
+  </form>
+  <footer id="o-danych">
+    <div><strong>Publiczne dane. Wspólny wgląd.</strong>
+    <p>Źródło: roczne publikacje rejestru wydatków Urzędu Miejskiego w Gdańsku.</p>
+    <p>Każdy wiersz odpowiada jednemu wpisowi źródłowemu. Rok 2026 obejmuje publikację do 29 lipca. Kwoty opisują poniesione wydatki.</p>
+    </div>
+    <p>Poprawiono sześć oczywistych literówek w latach dat, zgodnie z analizą plików źródłowych. Pełne opisy zachowano, również gdy zawierają fragmenty innych wpisów.</p>
+  </footer>
+</main>
+</div>
+<dialog id="record-dialog" aria-labelledby="record-title">
+  <div class="dialog-top"><p class="eyebrow">SZCZEGÓŁY WPISU</p><form method="dialog"><button autofocus>Zamknij</button></form></div>
+  <h2 id="record-title">Pełny wpis</h2>
+  <dl id="record-fields"></dl>
+</dialog>
+<script type="module" src="/main.ts"></script>
+</body>
+</html>

@@ -15,7 +15,11 @@
     "evaluate:search": "node --expose-gc scripts/ocen-wyszukiwanie.ts",
     "typecheck": "tsc --noEmit",
     "test": "node --test poc/tests/search.test.ts",
-    "test:browser": "playwright test"
+    "test:browser": "playwright test",
+    "dev": "npm run prepare:site && vite --config vite.site.config.ts --host 0.0.0.0",
+    "build": "npm run prepare:site && npm run typecheck && vite build --config vite.site.config.ts",
+    "preview": "vite preview --config vite.site.config.ts --host 0.0.0.0",
+    "test:site:unit": "node --test tests/site/*.test.ts"
   },
   "dependencies": {
     "minisearch": "7.2.0"
