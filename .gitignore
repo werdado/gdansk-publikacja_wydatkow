@@ -3,6 +3,8 @@ node_modules/
 .worktrees/
 dist-poc/
 poc/public/generated/
+/site/public/generated/
+/dist/
 test-results/
 playwright-report/
 *.tsbuildinfo
