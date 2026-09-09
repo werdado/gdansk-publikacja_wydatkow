@@ -38,6 +38,16 @@ test('globalne zapytanie łączy wydział i opis; filtr kolumny ogranicza pole',
   assert.deepEqual(ids({ text: 'sportu remont', profile: 'control' }), ['2026:2']);
   assert.deepEqual(ids({ text: 'sportu remont', scope: 'contractSubject', profile: 'control' }), []);
 });
+test('globalne zapytanie i dwie kolumny obowiązują jednocześnie', () => {
+  const request = query({
+    text: 'remont', profile: 'one', combine: 'AND',
+    columns: { contractorName: 'prescom', contractSubject: 'hali' },
+    filters: { amount: { operator: '>', value: 100 } },
+  });
+  assert.deepEqual(engine.search(request).hits.map(hit => hit.id), ['2026:2']);
+  request.columns!.contractSubject = 'szkoly';
+  assert.deepEqual(engine.search(request).hits, []);
+});
 test('numery umów zachowują interpunkcję i literalne cyfry', () => {
   assert.deepEqual(ids({ text: '/123/2025', scope: 'contractNumber' }), ['2026:3']);
   assert.deepEqual(ids({ text: '/123/2025' }), ['2026:3']);
