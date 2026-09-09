@@ -21,6 +21,14 @@ test('pełny zbiór, stałe ustawienia i dwie kolumny', async ({ page }) => {
   await expect(page.getByText('Rejestr wydatków Gdańska z lat 2015-2026, ukryty w lipcu 2026.', { exact: false })).toBeVisible();
   await expect(page.getByText('Strona obejmuje dane usunięte z Biuletynu Informacji Publicznej Miasta Gdańska w lipcu 2026.', { exact: false })).toBeVisible();
   await expect(page.getByRole('link', { name: 'https://rejestrumow.gov.pl/' })).toHaveCount(2);
+  await expect(page.getByRole('link', { name: 'Pobierz dane w formie Excel' })).toHaveAttribute('href', './wydatki-gdanska_2015-2026.xlsx');
+  await expect(page.getByRole('link', { name: 'Pobierz źródłowe pliki JSON' })).toHaveAttribute('href', './data/index.html');
+  const excel = await page.request.get('/wydatki-gdanska_2015-2026.xlsx');
+  expect(excel.ok()).toBe(true);
+  expect((await excel.body()).subarray(0, 2).toString()).toBe('PK');
+  const jsonIndex = await page.request.get('/data/index.html');
+  expect(jsonIndex.ok()).toBe(true);
+  expect(await jsonIndex.text()).toContain('publikacja-wydatkow-2026.json');
   await expect(page.getByText('Wyniki obejmują cały zbiór.', { exact: true })).toHaveCount(0);
   await expect(page.locator('tr.entry-row')).toHaveCount(100);
   await expect(page.locator('#profile, #combine, #scope, #example')).toHaveCount(0);
@@ -48,6 +56,24 @@ test('sortowanie zachowuje filtry, literówki w numerze nie pasują', async ({ p
   await submit(page);
   await expect(page.locator('#count')).toHaveAttribute('data-total', '0');
 });
+test('polski format daty filtruje wpisy', async ({ page }) => {
+  await ready(page);
+  const from = page.locator('#contractDate-from');
+  const to = page.locator('#contractDate-to');
+  const picker = page.locator('#contractDate-from-picker');
+  await expect(from).toHaveAttribute('placeholder', 'dd/mm/yyyy');
+  await expect(to).toHaveAttribute('placeholder', 'dd/mm/yyyy');
+  await expect(from.locator('../..')).toHaveCSS('white-space', 'nowrap');
+  await expect(picker).toHaveAttribute('type', 'date');
+  await expect(page.getByRole('button', { name: 'Otwórz kalendarz: Data zawarcia, Od' })).toBeVisible();
+  await picker.fill('2026-07-29');
+  await expect(from).toHaveValue('29/07/2026');
+  await to.fill('29/07/2026');
+  await submit(page);
+  expect(Number(await page.locator('#count').getAttribute('data-total'))).toBeGreaterThan(0);
+  const dates = await page.locator('tr.entry-row td:first-child').allTextContents();
+  expect(dates.every(value => value.trim().startsWith('2026-07-29'))).toBe(true);
+});
 test('wąski ekran i pełny długi opis', async ({ page }) => {
   await page.setViewportSize({ width: 390, height: 844 });
   await ready(page);
@@ -63,6 +89,14 @@ test('wąski ekran i pełny długi opis', async ({ page }) => {
   await page.keyboard.press('Escape');
   await expect(page.locator('#record-dialog')).not.toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
+});
+test('kliknięcie w dowolną komórkę rozwija wpis', async ({ page }) => {
+  await ready(page);
+  const row = page.locator('tr.entry-row').first();
+  const id = await row.getAttribute('data-id');
+  await row.locator('td').first().click();
+  await expect(page.locator('#record-dialog')).toBeVisible();
+  await expect(page.locator('#record-title')).toHaveText('Pełny wpis ' + id);
 });
 test('błąd pobrania nie pokazuje niepełnych wyników', async ({ page }) => {
   await page.context().route('**/generated/manifest.json', route => route.fulfill({ status: 503, body: '' }));
@@ -114,6 +148,9 @@ test('wysokość wierszy odpowiada oknu także po zmianie szerokości', async ({
     const heights = await page.locator('tr.entry-row').evaluateAll(rows => rows.map(row => row.getBoundingClientRect().height));
     expect([...new Set(heights)]).toEqual([ROW_HEIGHT]);
     const table = page.locator('.table-scroll');
+    const dimensions = await table.evaluate(element => ({ viewport: element.clientWidth, table: element.querySelector('table')!.getBoundingClientRect().width }));
+    if (width === 1440) expect(dimensions.table).toBe(dimensions.viewport);
+    else expect(dimensions.table).toBeGreaterThan(dimensions.viewport);
     await table.evaluate(element => { element.scrollLeft = element.scrollWidth; });
     await expect(page.getByRole('button', { name: 'Numer umowy', exact: true })).toBeInViewport();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);

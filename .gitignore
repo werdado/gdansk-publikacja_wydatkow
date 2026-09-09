@@ -4,6 +4,8 @@ node_modules/
 dist-poc/
 poc/public/generated/
 /site/public/generated/
+/site/public/data/
+/site/public/wydatki-gdanska_2015-2026.xlsx
 /dist/
 test-results/
 playwright-report/

@@ -29,6 +29,10 @@ export function renderRow(entry: Entry, index: number): HTMLTableRowElement {
   const row = document.createElement('tr');
   row.className = 'entry-row'; row.dataset.id = entry.id;
   row.setAttribute('aria-rowindex', String(index + 3));
+  row.addEventListener('click', event => {
+    if (event.target instanceof Element && event.target.closest('button')) return;
+    openRecord(entry);
+  });
   for (const field of TABLE_COLUMNS) {
     const cell = document.createElement('td');
     if (field === 'contractCost') cell.className = 'number';

@@ -2,7 +2,7 @@
 
 Pomiar: 2026-09-09T18:41:21.829Z. Pełny zbiór: **66 343 wpisy**. Profil **`one`**, łączenie **AND**. Surowe wyniki: [pomiary.json](wyniki-strony/pomiary.json).
 
-Po tym pomiarze uproszczono warstwę prezentacji: usunięto górny pasek, tabela ma sześć kolumn, a cztery pozostałe pola są dostępne w oknie „Rozwiń wpis”. Pomiary czasów i pamięci poniżej pochodzą z wcześniejszego układu dziesięciokolumnowego; algorytm wyszukiwania i zbiór danych nie zostały zmienione. Aktualny układ, treści i szerokości sprawdzono ponownie testami Chromium.
+Po tym pomiarze uproszczono warstwę prezentacji: usunięto górny pasek, tabela ma sześć kolumn, a cztery pozostałe pola są dostępne w oknie „Rozwiń wpis”. Dodano również publiczne pliki do pobrania: skoroszyt Excel oraz 12 źródłowych plików JSON z osobnym indeksem. Pomiary czasów i pamięci poniżej pochodzą z wcześniejszego układu dziesięciokolumnowego; algorytm wyszukiwania i zbiór danych nie zostały zmienione. Aktualny układ, treści i szerokości sprawdzono ponownie testami Chromium.
 
 ## Środowisko i odtworzenie
 
@@ -72,7 +72,7 @@ Stały koszt utrzymywanego zbioru i indeksu pozostaje w workerze; po GC jego uż
 
 | Szerokość viewportu | Szerokość dokumentu | Widoczna szerokość tabeli | Pełna szerokość tabeli | Rzeczywista wysokość wiersza |
 | ---: | ---: | ---: | ---: | ---: |
-| 1440 px | 1440 px | 1344 px | 1320 px | 128 px |
+| 1440 px | 1440 px | 1344 px | 1344 px | 128 px |
 | 390 px | 390 px | 354 px | 1320 px | 128 px |
 
 Wysokości wszystkich aktualnych wierszy są zgodne z `ROW_HEIGHT = 128`, także po zmianie szerokości. Dokument nie przewija się poziomo; poziome przewijanie występuje wewnątrz tabeli.
@@ -105,9 +105,9 @@ Wersje artefaktów z tej kontroli:
 
 | Plik | Rozmiar |
 | --- | ---: |
-| `index.html` | 3 966 B |
-| `assets/index-D2QOrSxQ.css` | 7 153 B |
-| `assets/index-CD9LrStk.js` | 9 459 B |
+| `index.html` | 4 316 B |
+| `assets/index-CWEVB1Fu.css` | 7 941 B |
+| `assets/index-DSYYdc8-.js` | 10 889 B |
 | `assets/worker-D4Fkauf4.js` | 22 473 B |
 | `generated/manifest.json` | 3 416 B |
 | `generated/records.ecb1865a1975168b.json` | 37 150 709 B |
@@ -115,15 +115,15 @@ Wersje artefaktów z tej kontroli:
 | `generated/index.52682b4e6d620f31.json` | 14 625 160 B |
 | `generated/index.52682b4e6d620f31.json.gz` | 3 939 871 B |
 
-Łączny rozmiar plików `dist/` wynosi 60 967 663 B. Kontrola potwierdza działanie relatywnego `base: './'` bez kodowania w adresach nazwy przyszłego repozytorium.
+Do pakietu dochodzą śledzone materiały do pobrania: `wydatki-gdanska_2015-2026.xlsx` (7 659 480 B), `data/index.html` oraz 12 rocznych plików JSON (łącznie 41 894 884 B). Łączny rozmiar plików `dist/` wynosi 110 525 951 B. Kontrola potwierdza działanie relatywnego `base: './'` bez kodowania w adresach nazwy przyszłego repozytorium.
 
-Do odtworzenia kontroli zbuduj stronę, skopiuj całą zawartość `dist/` do `podglad/rejestr/` pod zwykłym serwerem statycznym i otwórz `/rejestr/`. Sprawdź oba wejścia (pierwsze oraz odświeżenie), liczbę 66 343 oraz odpowiedzi dla workera, manifestu i obu plików `.json.gz`. Serwer powinien udostępniać zwykłe bajty gzip, bez własnego `Content-Encoding`.
+Do odtworzenia kontroli zbuduj stronę, skopiuj całą zawartość `dist/` do `podglad/rejestr/` pod zwykłym serwerem statycznym i otwórz `/rejestr/`. Sprawdź oba wejścia (pierwsze oraz odświeżenie), liczbę 66 343, odpowiedzi dla workera, manifestu i obu plików `.json.gz`, a także bezpośrednie adresy `wydatki-gdanska_2015-2026.xlsx` i `data/index.html`. Serwer powinien udostępniać zwykłe bajty gzip, bez własnego `Content-Encoding`.
 
 ## Publikacja przez GitHub Pages
 
 Plik [`.github/workflows/pages.yml`](../.github/workflows/pages.yml) jest ręcznie uruchamianym workflow. Po skonfigurowaniu repozytorium na GitHub i wybraniu „GitHub Actions” jako źródła Pages buduje oraz sprawdza stronę, po czym przesyła wyłącznie `dist/` do GitHub Pages. Obecnie nie ma skonfigurowanego zdalnego repozytorium, więc nie wykonano publikacji i nie podano adresu strony.
 
-Kontrola wejść CI (`git ls-files --error-unmatch`) potwierdziła śledzenie 12 plików `data/`, `scripts/dane-poc.ts`, `scripts/przygotuj-strone.ts`, `src/`, `site/`, `vite.site.config.ts` oraz `package-lock.json`. `dist/` i `site/public/generated/` są poprawnie ignorowanymi wynikami budowania; `node_modules/`, POC i skrypty narzędziowe nie są częścią artefaktu Pages.
+Kontrola wejść CI (`git ls-files --error-unmatch`) potwierdziła śledzenie 12 plików JSON i `data/index.html`, skoroszytu, `scripts/dane-poc.ts`, `scripts/przygotuj-strone.ts`, `src/`, `site/`, `vite.site.config.ts` oraz `package-lock.json`. Generator kopiuje skoroszyt i cały katalog `data/` do wyniku. `dist/` i kopie w `site/public/` są poprawnie ignorowanymi wynikami budowania; `node_modules/`, POC i skrypty narzędziowe nie są częścią artefaktu Pages.
 
 Końcowa kontrola tego pakietu użyła tej samej kolejności co workflow:
 
@@ -134,11 +134,11 @@ Końcowa kontrola tego pakietu użyła tej samej kolejności co workflow:
 | `npm run test:site:unit` | 2 testy zaliczone, 0 błędów; 78,36 ms |
 | `npm run build` | przygotowano 66 343 wpisy, kontrola TypeScript przeszła, Vite: 92 ms |
 | `npx playwright install --with-deps chromium` | Chromium i zależności systemowe dostępne; bez nowych pakietów systemowych |
-| `npm run test:site:browser` | 9 testów zaliczonych; kontrola powtórzona po zmianie treści i kolumn |
+| `npm run test:site:browser` | 11 testów zaliczonych; kontrola powtórzona po zmianie treści i kolumn |
 
 ## Testy i czułość regresji
 
-Dziewięć testów przeglądarkowych obejmuje wymagane pięć scenariuszy, zachowanie fokusu przy przesuwaniu okna, wysokość wierszy, klawiaturę i liczebności wydziałów oraz skuteczne ponowienie pobrania. Testy sprawdzają również aktualne treści, sześć widocznych kolumn, brak usuniętych filtrów i obecność wszystkich dziesięciu pól w „Rozwiń wpis”. Korzystają z publicznych kontrolek, `tr.entry-row`, `data-id`, `#count[data-total]`, natywnego dialogu i istniejących atrybutów gotowości.
+Jedenaście testów przeglądarkowych obejmuje wymagane pięć scenariuszy, zachowanie fokusu przy przesuwaniu okna, wysokość wierszy, klawiaturę i liczebności wydziałów, polski format daty, otwieranie szczegółów przez kliknięcie wiersza oraz skuteczne ponowienie pobrania. Testy sprawdzają również aktualne treści, sześć widocznych kolumn, brak usuniętych filtrów i obecność wszystkich dziesięciu pól w „Rozwiń wpis”. Korzystają z publicznych kontrolek, `tr.entry-row`, `data-id`, `#count[data-total]`, natywnego dialogu i istniejących atrybutów gotowości.
 
 Wymagane pięć testów było zielonych od pierwszego uruchomienia na istniejącym buildzie (8,1 s); po rozszerzeniu osiem testów także przeszło (11,4 s). Nie wykryto rzeczywistej rozbieżności wymagającej poprawki. Dodatkowo kontrolowana, tymczasowa mutacja CSS wysokości wiersza z 128 na 129 px dała RED: test zgłosił oczekiwane `[128]`, otrzymane `[129]`. Przywrócono plik i ponownie zbudowano stronę przed końcową weryfikacją GREEN. To dowód czułości testu, nie opis naprawy istniejącego błędu.
 
@@ -149,7 +149,7 @@ Końcowa weryfikacja po przywróceniu CSS:
 | `npm test` | 13 testów, 13 zaliczonych, 0 błędów; 338,73 ms |
 | `npm run test:site:unit` | 2 testy, 2 zaliczone, 0 błędów; 75,81 ms |
 | `npm run build` | przygotowano 66 343 wpisy; TypeScript i build poprawne; Vite 105 ms |
-| `npm run test:site:browser` | 9 testów zaliczonych; kontrola powtórzona po zmianie treści i kolumn |
+| `npm run test:site:browser` | 11 testów zaliczonych; kontrola powtórzona po zmianie treści i kolumn |
 | `npm run build:poc` | TypeScript i build POC poprawne; Vite 85 ms |
 | `npm run measure:site` | zapisano trzy zimne starty, dziewięć zapytań, 35 kroków przewijania, pamięć obu wątków i pięć zrzutów |
 

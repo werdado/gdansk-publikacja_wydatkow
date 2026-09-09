@@ -38,6 +38,23 @@ function textControl(id: string, label: string, type = 'search') {
   control.id = id; control.type = type; control.setAttribute('aria-label', label);
   return control;
 }
+function dateValue(control: HTMLInputElement): string {
+  const value = control.value.trim();
+  if (!value) { control.setCustomValidity(''); return ''; }
+  const match = /^(\d{2})\/(\d{2})\/(\d{4})$/.exec(value);
+  if (!match) { control.setCustomValidity('Wpisz datę w formacie dd/mm/rrrr.'); return ''; }
+  const [, day, month, year] = match;
+  const parsed = new Date(Date.UTC(Number(year), Number(month) - 1, Number(day)));
+  const valid = parsed.getUTCFullYear() === Number(year)
+    && parsed.getUTCMonth() === Number(month) - 1
+    && parsed.getUTCDate() === Number(day);
+  control.setCustomValidity(valid ? '' : 'Wpisz prawidłową datę.');
+  return valid ? `${year}-${month}-${day}` : '';
+}
+function displayDate(value: string): string {
+  const [year, month, day] = value.split('-');
+  return year && month && day ? `${day}/${month}/${year}` : '';
+}
 for (const field of TABLE_COLUMNS) {
   const heading = document.createElement('th'); heading.scope = 'col'; heading.dataset.field = field;
   const button = document.createElement('button'); button.type = 'button'; button.textContent = LABELS[field];
@@ -53,8 +70,24 @@ for (const field of TABLE_COLUMNS) {
     cell.append(control);
   } else if (dateFields.includes(field as typeof dateFields[number])) {
     for (const [key, label] of [['from', 'Od'], ['to', 'Do']]) {
-      const wrapper = document.createElement('label'); wrapper.textContent = label;
-      wrapper.append(textControl(field + '-' + key, LABELS[field] + ': ' + label, 'date'));
+      const id = field + '-' + key;
+      const wrapper = document.createElement('div'); wrapper.className = 'date-bound';
+      const caption = document.createElement('label'); caption.htmlFor = id; caption.textContent = label;
+      const entry = document.createElement('span'); entry.className = 'date-entry';
+      const control = textControl(id, LABELS[field] + ': ' + label, 'text');
+      control.placeholder = 'dd/mm/yyyy'; control.inputMode = 'numeric'; control.maxLength = 10;
+      control.pattern = '\\d{2}/\\d{2}/\\d{4}'; control.autocomplete = 'off';
+      const picker = textControl(id + '-picker', 'Wybierz datę: ' + LABELS[field] + ', ' + label, 'date');
+      picker.className = 'native-date-picker'; picker.tabIndex = -1; picker.setAttribute('aria-hidden', 'true');
+      const openPicker = document.createElement('button'); openPicker.type = 'button'; openPicker.className = 'date-picker-button';
+      openPicker.textContent = '▦'; openPicker.setAttribute('aria-label', 'Otwórz kalendarz: ' + LABELS[field] + ', ' + label);
+      openPicker.addEventListener('click', () => typeof picker.showPicker === 'function' ? picker.showPicker() : picker.click());
+      picker.addEventListener('change', () => {
+        control.value = displayDate(picker.value);
+        control.dispatchEvent(new Event('input', { bubbles: true }));
+      });
+      control.addEventListener('input', () => { picker.value = dateValue(control); });
+      entry.append(control, openPicker, picker); wrapper.append(caption, entry);
       cell.append(wrapper);
     }
   } else if (field === 'contractCost') {
@@ -83,8 +116,9 @@ function currentQuery(): PublicQuery {
     filters.amount = { operator: operator as '>' | '<', value: amount.valueAsNumber };
   }
   for (const field of dateFields) {
-    const from = input(field + '-from').value, to = input(field + '-to').value;
-    input(field + '-to').setCustomValidity(from && to && from > to ? 'Data końcowa nie może poprzedzać początkowej.' : '');
+    const fromControl = input(field + '-from'), toControl = input(field + '-to');
+    const from = dateValue(fromControl), to = dateValue(toControl);
+    if (from && to && from > to) toControl.setCustomValidity('Data końcowa nie może poprzedzać początkowej.');
     if (from || to) filters.dates![field] = { from, to };
   }
   return { text: input('query').value,
