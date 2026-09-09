@@ -72,6 +72,27 @@ test('długie przewijanie nie gromadzi wszystkich wierszy', async ({ page }) => 
   await expect(page.locator('#count')).toHaveAttribute('data-total', '66343');
 });
 
+test('klawiatura zachowuje kolejność wpisów przy rozszerzaniu i przesuwaniu okna', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 1000 });
+  await ready(page);
+  await page.locator('tr.entry-row button').first().focus();
+  const sizes = new Set<number>();
+  for (let index = 0; index < 340; index++) {
+    if (index) await page.keyboard.press('Tab');
+    // Let keyboard scrolling and its animation-frame window update run before checking focus.
+    await page.evaluate(() => new Promise<void>(resolve => requestAnimationFrame(() => requestAnimationFrame(() => resolve()))));
+    await expect(page.locator('#results')).toHaveAttribute('aria-busy', 'false');
+    await expect(page.locator(`tr.entry-row[aria-rowindex="${index + 3}"] button`)).toBeFocused();
+    const size = await page.locator('tr.entry-row').count();
+    expect(size).toBeLessThanOrEqual(300);
+    sizes.add(size);
+  }
+  expect([...sizes]).toEqual([100, 200, 300]);
+  expect(Number(await page.locator('tr.entry-row').first().getAttribute('aria-rowindex'))).toBeGreaterThan(3);
+  await page.keyboard.press('Shift+Tab');
+  await expect(page.locator('tr.entry-row[aria-rowindex="341"] button')).toBeFocused();
+});
+
 test('wysokość wierszy odpowiada oknu także po zmianie szerokości', async ({ page }) => {
   await ready(page);
   for (const width of [1440, 390]) {

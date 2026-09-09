@@ -1,4 +1,5 @@
 import MiniSearch from 'minisearch';
+import { MAX_WINDOW_ROWS, PAGE_SIZE } from '../pagination.ts';
 import { SearchEngine, INDEX_OPTIONS } from './engine.ts';
 import { publicQuery } from './public-query.ts';
 import { readText } from './transport.ts';
@@ -13,7 +14,7 @@ const send = (message: Response) => postMessage(message);
 function emitPage(offset: number, limit: number, windowId: number) {
   if (!engine || !current) return;
   const start = Math.max(0, Math.floor(offset));
-  const size = Math.max(1, Math.min(300, Math.floor(limit)));
+  const size = Math.max(1, Math.min(MAX_WINDOW_ROWS, Math.floor(limit)));
   send({
     type: 'result', requestId: current.requestId, windowId, offset: start,
     total: current.result.hits.length, facets: current.result.facets,
@@ -37,7 +38,7 @@ onmessage = async (event: MessageEvent<Request>) => {
     } else if (message.type === 'search') {
       if (!engine) throw new Error('Dane nie są jeszcze gotowe.');
       current = { requestId: message.requestId, result: engine.search(publicQuery(message.query)) };
-      emitPage(0, 100, 0);
+      emitPage(0, PAGE_SIZE, 0);
     } else if (current?.requestId === message.requestId) {
       emitPage(message.offset, message.limit, message.windowId);
     }

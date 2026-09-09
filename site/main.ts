@@ -1,4 +1,5 @@
 import './style.css';
+import { PAGE_SIZE } from '../src/pagination.ts';
 import { DATE_FIELDS, FUZZY_FIELDS, LABELS, normalize } from '../src/search/model.ts';
 import type { Entry, Filters, Result } from '../src/search/model.ts';
 import type { PublicQuery } from '../src/search/public-query.ts';
@@ -131,6 +132,10 @@ function renderFacets() {
   get('department-selected').textContent = departments.size ? '(' + departments.size + ')' : '';
 }
 function renderWindow(rows: Entry[], offset: number) {
+  const active = document.activeElement;
+  const focusedId = active instanceof HTMLButtonElement && body.contains(active)
+    ? active.closest<HTMLTableRowElement>('tr.entry-row')?.dataset.id : undefined;
+  let focusedButton: HTMLButtonElement | null = null;
   const fragment = document.createDocumentFragment();
   function spacer(height: number) {
     const row = document.createElement('tr'); row.className = 'table-spacer'; row.setAttribute('aria-hidden', 'true');
@@ -138,9 +143,14 @@ function renderWindow(rows: Entry[], offset: number) {
     row.append(cell); fragment.append(row);
   }
   if (bounds.top) spacer(bounds.top);
-  rows.forEach((entry, index) => fragment.append(renderRow(entry, offset + index)));
+  for (const [index, entry] of rows.entries()) {
+    const row = renderRow(entry, offset + index);
+    if (entry.id === focusedId) focusedButton = row.querySelector('button');
+    fragment.append(row);
+  }
   if (bounds.bottom) spacer(bounds.bottom);
   body.replaceChildren(fragment);
+  focusedButton?.focus({ preventScroll: true });
 }
 function updateWindow(extra = 0) {
   if (!ready || queryPending || waiting) return;
@@ -178,7 +188,7 @@ function start() {
     if (message.windowId !== windowId) return;
     if (message.windowId === 0) {
       total = message.total;
-      bounds = { start: 0, end: message.rows.length, visible: Math.min(100, total), top: 0, bottom: 0 };
+      bounds = { start: 0, end: message.rows.length, visible: Math.min(PAGE_SIZE, total), top: 0, bottom: 0 };
       facets = message.facets; renderFacets(); tableScroll.scrollTop = 0; queryPending = false;
     }
     waiting = false;
@@ -207,7 +217,7 @@ form.addEventListener('change', event => {
 });
 get('clear').addEventListener('click', () => { form.reset(); departments.clear(); run(); });
 get('retry').addEventListener('click', start);
-more.addEventListener('click', () => updateWindow(100));
+more.addEventListener('click', () => updateWindow(PAGE_SIZE));
 tableScroll.addEventListener('scroll', () => updateWindow(), { passive: true });
 window.addEventListener('resize', () => updateWindow());
 start();
