@@ -1,0 +1,13 @@
+{
+  "browser": "153.0.8010.12",
+  "viewport": {
+    "width": 390,
+    "height": 844
+  },
+  "timings": {
+    "loadMs": 470.3999999910593,
+    "restoreMs": 353.79999999701977,
+    "totalMs": 824.1999999880791
+  },
+  "note": "Wąski viewport desktopowego Chromium; nie jest to pomiar fizycznego telefonu."
+}

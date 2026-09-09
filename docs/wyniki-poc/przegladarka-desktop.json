@@ -1,0 +1,13 @@
+{
+  "browser": "153.0.8010.12",
+  "viewport": {
+    "width": 1280,
+    "height": 720
+  },
+  "timings": {
+    "loadMs": 476,
+    "restoreMs": 355,
+    "totalMs": 831
+  },
+  "note": "Lokalny Chromium, zwykłe JSON przez HTTP, bez ograniczenia CPU i sieci."
+}
