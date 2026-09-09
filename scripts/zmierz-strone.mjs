@@ -187,12 +187,13 @@ try {
   await page.keyboard.press('Enter');
   const columnsReachedByTab = [];
   await page.locator('#headings button').first().focus();
-  for (let column = 0; column < 10; column++) {
+  const columnCount = await page.locator('#headings button').count();
+  for (let column = 0; column < columnCount; column++) {
     const button = page.locator('#headings button').nth(column);
     await expect(button).toBeFocused();
     await expect(button).toBeInViewport();
     columnsReachedByTab.push(await button.textContent());
-    if (column < 9) await page.keyboard.press('Tab');
+    if (column < columnCount - 1) await page.keyboard.press('Tab');
   }
   await page.screenshot({ path: output + '/ostatnie-kolumny.png', fullPage: true });
   const manual = { departmentBeforeAmount, departmentAfterAmount, amountTotal, selectionPreservedAfterNameSearch: true, columnsReachedByTab, dialogCloseButton: true };

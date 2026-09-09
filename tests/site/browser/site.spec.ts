@@ -15,8 +15,18 @@ async function submit(page: Page) {
 }
 test('pełny zbiór, stałe ustawienia i dwie kolumny', async ({ page }) => {
   await ready(page);
+  await expect(page.locator('body > .page > header')).toHaveCount(0);
+  await expect(page.getByText('GDAŃSK. Rejestr wydatków', { exact: true })).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Wydatki — jawne nawet gdy ukryte.' })).toBeVisible();
+  await expect(page.getByText('Rejestr wydatków Gdańska z lat 2015-2026, ukryty w lipcu 2026.', { exact: false })).toBeVisible();
+  await expect(page.getByText('Strona obejmuje dane usunięte z Biuletynu Informacji Publicznej Miasta Gdańska w lipcu 2026.', { exact: false })).toBeVisible();
+  await expect(page.getByRole('link', { name: 'https://rejestrumow.gov.pl/' })).toHaveCount(2);
+  await expect(page.getByText('Wyniki obejmują cały zbiór.', { exact: true })).toHaveCount(0);
   await expect(page.locator('tr.entry-row')).toHaveCount(100);
   await expect(page.locator('#profile, #combine, #scope, #example')).toHaveCount(0);
+  await expect(page.locator('#headings th')).toHaveCount(6);
+  await expect(page.getByRole('button', { name: /^(Tryb zawarcia|Rodzaj umowy|Obowiązuje od dnia|Obowiązuje do dnia)$/ })).toHaveCount(0);
+  await expect(page.locator('#filter-contractProcedure, #filter-contractType, #contractStartDate-from, #contractStartDate-to, #contractEndDate-from, #contractEndDate-to')).toHaveCount(0);
   await page.locator('#filter-contractorName').fill('prescom');
   await page.locator('#filter-contractSubject').fill('szkolenie');
   await submit(page);
@@ -46,6 +56,10 @@ test('wąski ekran i pełny długi opis', async ({ page }) => {
   await page.getByRole('button', { name: 'Rozwiń wpis 2015:2614', exact: true }).click();
   await expect(page.locator('#record-dialog')).toBeVisible();
   await expect(page.locator('#record-fields')).toContainText('MIECZYSŁAW ROBAKOWSKI');
+  await expect(page.locator('#record-fields')).toContainText('Tryb zawarcia');
+  await expect(page.locator('#record-fields')).toContainText('Rodzaj umowy');
+  await expect(page.locator('#record-fields')).toContainText('Obowiązuje od dnia');
+  await expect(page.locator('#record-fields')).toContainText('Obowiązuje do dnia');
   await page.keyboard.press('Escape');
   await expect(page.locator('#record-dialog')).not.toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -101,7 +115,7 @@ test('wysokość wierszy odpowiada oknu także po zmianie szerokości', async ({
     expect([...new Set(heights)]).toEqual([ROW_HEIGHT]);
     const table = page.locator('.table-scroll');
     await table.evaluate(element => { element.scrollLeft = element.scrollWidth; });
-    await expect(page.getByRole('button', { name: 'Obowiązuje do dnia', exact: true })).toBeInViewport();
+    await expect(page.getByRole('button', { name: 'Numer umowy', exact: true })).toBeInViewport();
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
   }
 });

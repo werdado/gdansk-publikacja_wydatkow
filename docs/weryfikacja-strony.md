@@ -2,6 +2,8 @@
 
 Pomiar: 2026-09-09T18:41:21.829Z. Pełny zbiór: **66 343 wpisy**. Profil **`one`**, łączenie **AND**. Surowe wyniki: [pomiary.json](wyniki-strony/pomiary.json).
 
+Po tym pomiarze uproszczono warstwę prezentacji: usunięto górny pasek, tabela ma sześć kolumn, a cztery pozostałe pola są dostępne w oknie „Rozwiń wpis”. Pomiary czasów i pamięci poniżej pochodzą z wcześniejszego układu dziesięciokolumnowego; algorytm wyszukiwania i zbiór danych nie zostały zmienione. Aktualny układ, treści i szerokości sprawdzono ponownie testami Chromium.
+
 ## Środowisko i odtworzenie
 
 Chromium 153.0.8010.12 headless, Playwright 1.63.0, Node.js v24.21.0, Linux 7.0.12-linuxkit, ARM64. Kontener widzi 12 CPU i 7.75 GiB RAM; `lscpu` wskazuje producenta Apple, dokładny model procesora nie jest udostępniony. Lokalny HTTP na 127.0.0.1:4174, produkcyjny build Vite, pliki danych i indeksu gzip. Bez ograniczania CPU i sieci.
@@ -70,8 +72,8 @@ Stały koszt utrzymywanego zbioru i indeksu pozostaje w workerze; po GC jego uż
 
 | Szerokość viewportu | Szerokość dokumentu | Widoczna szerokość tabeli | Pełna szerokość tabeli | Rzeczywista wysokość wiersza |
 | ---: | ---: | ---: | ---: | ---: |
-| 1440 px | 1440 px | 1344 px | 2200 px | 128 px |
-| 390 px | 390 px | 354 px | 2200 px | 128 px |
+| 1440 px | 1440 px | 1344 px | 1320 px | 128 px |
+| 390 px | 390 px | 354 px | 1320 px | 128 px |
 
 Wysokości wszystkich aktualnych wierszy są zgodne z `ROW_HEIGHT = 128`, także po zmianie szerokości. Dokument nie przewija się poziomo; poziome przewijanie występuje wewnątrz tabeli.
 
@@ -81,13 +83,13 @@ Kontrole wykonywał agent przez zdarzenia klawiatury Playwright i ocenę zrzutó
 
 - Dropdown wydziałów: Enter otwiera i zamyka, Tab przechodzi do wyszukiwania i checkboxu, Spacja zaznacza. Wybrano „WYDZIAŁ KADR I ORGANIZACJI”: 7288 wpisów. Wpisanie niepasującej nazwy ukrywa opcję, ale zachowuje licznik zaznaczeń `(1)`; powrót do `kadr` przywraca zaznaczony checkbox.
 - Kwota `> 1000`: liczebność wybranego wydziału i główny licznik wskazują **3479**. Test sprawdza też, że widoczne kwoty spełniają warunek. [Zrzut wydziałów](wyniki-strony/wydzialy-klawiatura.png).
-- Kolejne naciśnięcia Tab osiągają wszystkie dziesięć nagłówków; przeglądarka automatycznie przesuwa tabelę do aktywnego nagłówka. Ostatnia kolumna „Obowiązuje do dnia” jest widoczna i ma obrys fokusu. [Zrzut ostatnich kolumn](wyniki-strony/ostatnie-kolumny.png).
+- Kolejne naciśnięcia Tab osiągają wszystkie sześć nagłówków; przeglądarka automatycznie przesuwa tabelę do aktywnego nagłówka. Ostatnia kolumna „Numer umowy” jest widoczna i ma obrys fokusu. [Zrzut ostatnich kolumn](wyniki-strony/ostatnie-kolumny.png).
 - Wpis `2015:2614`: pełny długi opis zawiera „MIECZYSŁAW ROBAKOWSKI”, dialog ma dziesięć pól i przewijaną treść (715 px obszaru, 3741 px zawartości). Test zamyka go Escape, skrypt pomiarowy przyciskiem „Zamknij”. [Dialog przy 390 px](wyniki-strony/dialog-mobile-viewport.png).
 - Symulowane HTTP 503 manifestu: komunikat „Nie udało się wczytać danych.”, wyłączone wyszukiwanie, pusta tabela i przycisk ponowienia. Usunięcie błędu i ponowienie przywracają 66 343 wpisy. Brak błędów `pageerror` w przebiegu pomiarowym.
 
-Porównano [produkcyjny desktop](wyniki-strony/strona-desktop.png) z [makietą desktop](../designs/previews/03-notatnik-desktop.png) oraz [viewport 390 px](wyniki-strony/strona-mobile-viewport.png) z [makietą mobile](../designs/previews/03-notatnik-mobile.png). Zachowano kremowe tło, ciemne szeryfowe nagłówki, ceglasty akcent, znak „G.”, cienkie linie, układ hero i licznika oraz wskazówkę przewijania tabeli. Na wąskim ekranie licznik i lata przechodzą pod opis, a tekst i przyciski mieszczą się w dokumencie.
+Porównano [produkcyjny desktop](wyniki-strony/strona-desktop.png) z [makietą desktop](../designs/previews/03-notatnik-desktop.png) oraz [viewport 390 px](wyniki-strony/strona-mobile-viewport.png) z [makietą mobile](../designs/previews/03-notatnik-mobile.png). Zachowano kremowe tło, ciemne szeryfowe nagłówki, ceglasty akcent, cienkie linie, układ hero i licznika oraz wskazówkę przewijania tabeli. Usunięto górny pasek strony. Na wąskim ekranie licznik i lata przechodzą pod opis, a tekst i przyciski mieszczą się w dokumencie.
 
-Różnice: produkcja nie ma paska wyboru makiet ani przykładów szybkiego wyszukiwania, ma przycisk „Szukaj” i pełny licznik 66 343. Kolejność jest zgodna z publiczną tabelą (kontrahent przed przedmiotem); kolumny mają po 220 px, wiersze stałe 128 px. Dlatego pierwszy widok mobilny pokazuje datę i fragment kontrahenta, a przedmiot wymaga przewinięcia w prawo. Nagłówek filtrów i wyższe wiersze pozostawiają mniej wpisów jednocześnie niż makieta. To zauważalny kompromis gęstości tabeli; dostęp do wszystkich kolumn został sprawdzony. Natywne pola dat w tym Chromium pokazują format placeholdera przeglądarki `mm/dd/yyyy`, mimo polskich etykiet strony.
+Różnice: produkcja nie ma paska wyboru makiet ani przykładów szybkiego wyszukiwania, ma przycisk „Szukaj” i pełny licznik 66 343. Tabela pokazuje sześć pól: datę zawarcia, kontrahenta, przedmiot, poniesione wydatki, wydział i numer umowy. Tryb, rodzaj oraz daty obowiązywania pozostają w szczegółach wpisu. Kolumny mają po 220 px, a wiersze stałe 128 px. Dlatego pierwszy widok mobilny pokazuje datę i fragment kontrahenta, a pozostałe pola wymagają przewinięcia w prawo. Dostęp do wszystkich widocznych kolumn został sprawdzony. Natywne pole daty w tym Chromium pokazuje format placeholdera przeglądarki `mm/dd/yyyy`, mimo polskiej etykiety strony.
 
 ## Telefon fizyczny — niewykonane
 
@@ -104,8 +106,8 @@ Wersje artefaktów z tej kontroli:
 | Plik | Rozmiar |
 | --- | ---: |
 | `index.html` | 3 966 B |
-| `assets/index-BCvVvOhf.css` | 7 624 B |
-| `assets/index-DAEfrvvi.js` | 9 293 B |
+| `assets/index-D2QOrSxQ.css` | 7 153 B |
+| `assets/index-CD9LrStk.js` | 9 459 B |
 | `assets/worker-D4Fkauf4.js` | 22 473 B |
 | `generated/manifest.json` | 3 416 B |
 | `generated/records.ecb1865a1975168b.json` | 37 150 709 B |
@@ -113,7 +115,7 @@ Wersje artefaktów z tej kontroli:
 | `generated/index.52682b4e6d620f31.json` | 14 625 160 B |
 | `generated/index.52682b4e6d620f31.json.gz` | 3 939 871 B |
 
-Łączny rozmiar `dist/` wynosi 60 967 824 B. Kontrola potwierdza działanie relatywnego `base: './'` bez kodowania w adresach nazwy przyszłego repozytorium.
+Łączny rozmiar plików `dist/` wynosi 60 967 663 B. Kontrola potwierdza działanie relatywnego `base: './'` bez kodowania w adresach nazwy przyszłego repozytorium.
 
 Do odtworzenia kontroli zbuduj stronę, skopiuj całą zawartość `dist/` do `podglad/rejestr/` pod zwykłym serwerem statycznym i otwórz `/rejestr/`. Sprawdź oba wejścia (pierwsze oraz odświeżenie), liczbę 66 343 oraz odpowiedzi dla workera, manifestu i obu plików `.json.gz`. Serwer powinien udostępniać zwykłe bajty gzip, bez własnego `Content-Encoding`.
 
@@ -132,11 +134,11 @@ Końcowa kontrola tego pakietu użyła tej samej kolejności co workflow:
 | `npm run test:site:unit` | 2 testy zaliczone, 0 błędów; 78,36 ms |
 | `npm run build` | przygotowano 66 343 wpisy, kontrola TypeScript przeszła, Vite: 92 ms |
 | `npx playwright install --with-deps chromium` | Chromium i zależności systemowe dostępne; bez nowych pakietów systemowych |
-| `npm run test:site:browser` | 8 testów zaliczonych; 11,2 s |
+| `npm run test:site:browser` | 9 testów zaliczonych; kontrola powtórzona po zmianie treści i kolumn |
 
 ## Testy i czułość regresji
 
-Osiem testów przeglądarkowych obejmuje wymagane pięć scenariuszy oraz wysokość wierszy, klawiaturę i liczebności wydziałów, a także skuteczne ponowienie pobrania. Testy korzystają z publicznych kontrolek, `tr.entry-row`, `data-id`, `#count[data-total]`, natywnego dialogu i istniejących atrybutów gotowości. Nie dodano kontrolek debugowania ani zmian w kodzie produkcyjnym.
+Dziewięć testów przeglądarkowych obejmuje wymagane pięć scenariuszy, zachowanie fokusu przy przesuwaniu okna, wysokość wierszy, klawiaturę i liczebności wydziałów oraz skuteczne ponowienie pobrania. Testy sprawdzają również aktualne treści, sześć widocznych kolumn, brak usuniętych filtrów i obecność wszystkich dziesięciu pól w „Rozwiń wpis”. Korzystają z publicznych kontrolek, `tr.entry-row`, `data-id`, `#count[data-total]`, natywnego dialogu i istniejących atrybutów gotowości.
 
 Wymagane pięć testów było zielonych od pierwszego uruchomienia na istniejącym buildzie (8,1 s); po rozszerzeniu osiem testów także przeszło (11,4 s). Nie wykryto rzeczywistej rozbieżności wymagającej poprawki. Dodatkowo kontrolowana, tymczasowa mutacja CSS wysokości wiersza z 128 na 129 px dała RED: test zgłosił oczekiwane `[128]`, otrzymane `[129]`. Przywrócono plik i ponownie zbudowano stronę przed końcową weryfikacją GREEN. To dowód czułości testu, nie opis naprawy istniejącego błędu.
 
@@ -147,7 +149,7 @@ Końcowa weryfikacja po przywróceniu CSS:
 | `npm test` | 13 testów, 13 zaliczonych, 0 błędów; 338,73 ms |
 | `npm run test:site:unit` | 2 testy, 2 zaliczone, 0 błędów; 75,81 ms |
 | `npm run build` | przygotowano 66 343 wpisy; TypeScript i build poprawne; Vite 105 ms |
-| `npm run test:site:browser` | 8 testów zaliczonych; 11,2 s |
+| `npm run test:site:browser` | 9 testów zaliczonych; kontrola powtórzona po zmianie treści i kolumn |
 | `npm run build:poc` | TypeScript i build POC poprawne; Vite 85 ms |
 | `npm run measure:site` | zapisano trzy zimne starty, dziewięć zapytań, 35 kroków przewijania, pamięć obu wątków i pięć zrzutów |
 

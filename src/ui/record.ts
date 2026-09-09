@@ -1,8 +1,9 @@
 import { DATE_FIELDS, LABELS } from '../search/model.ts';
 import type { Entry } from '../search/model.ts';
-export const COLUMNS = ['contractDate', 'contractorName', 'contractSubject', 'contractCost', 'departmentOffice', 'contractNumber', 'contractProcedure', 'contractType', 'contractStartDate', 'contractEndDate'] as const;
+export const TABLE_COLUMNS = ['contractDate', 'contractorName', 'contractSubject', 'contractCost', 'departmentOffice', 'contractNumber'] as const;
+const DETAIL_FIELDS = [...TABLE_COLUMNS, 'contractProcedure', 'contractType', 'contractStartDate', 'contractEndDate'] as const;
 const amount = new Intl.NumberFormat('pl-PL', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-function display(entry: Entry, field: typeof COLUMNS[number]): string {
+function display(entry: Entry, field: typeof DETAIL_FIELDS[number]): string {
   if (field === 'contractCost') return amount.format(entry.contractCost);
   const value = entry[field];
   if (value === null) return 'Brak danych';
@@ -17,7 +18,7 @@ export function openRecord(entry: Entry) {
   const fields = document.querySelector('#record-fields')!;
   fields.replaceChildren();
   document.querySelector('#record-title')!.textContent = 'Pełny wpis ' + entry.id;
-  for (const field of COLUMNS) {
+  for (const field of DETAIL_FIELDS) {
     const label = document.createElement('dt'); label.textContent = LABELS[field];
     const value = document.createElement('dd'); value.textContent = display(entry, field);
     fields.append(label, value);
@@ -28,7 +29,7 @@ export function renderRow(entry: Entry, index: number): HTMLTableRowElement {
   const row = document.createElement('tr');
   row.className = 'entry-row'; row.dataset.id = entry.id;
   row.setAttribute('aria-rowindex', String(index + 3));
-  for (const field of COLUMNS) {
+  for (const field of TABLE_COLUMNS) {
     const cell = document.createElement('td');
     if (field === 'contractCost') cell.className = 'number';
     const box = document.createElement('div');

@@ -1,10 +1,10 @@
 import './style.css';
 import { PAGE_SIZE } from '../src/pagination.ts';
-import { DATE_FIELDS, FUZZY_FIELDS, LABELS, normalize } from '../src/search/model.ts';
+import { LABELS, normalize } from '../src/search/model.ts';
 import type { Entry, Filters, Result } from '../src/search/model.ts';
 import type { PublicQuery } from '../src/search/public-query.ts';
 import type { Request, Response } from '../src/search/protocol.ts';
-import { COLUMNS, renderRow } from '../src/ui/record.ts';
+import { TABLE_COLUMNS, renderRow } from '../src/ui/record.ts';
 import { windowFor } from '../src/ui/window.ts';
 
 function get<T extends HTMLElement = HTMLElement>(id: string): T {
@@ -21,7 +21,8 @@ const status = get('status');
 const more = get<HTMLButtonElement>('more');
 const tableScroll = document.querySelector<HTMLElement>('.table-scroll')!;
 const integer = new Intl.NumberFormat('pl-PL');
-const textFields = [...FUZZY_FIELDS, 'contractNumber'] as const;
+const textFields = ['contractorName', 'contractSubject', 'contractNumber'] as const;
+const dateFields = ['contractDate'] as const;
 const departments = new Set<string>();
 let facets: Result['facets'] = [];
 let sort: NonNullable<PublicQuery['sort']> = { field: 'contractDate', direction: 'desc' };
@@ -37,7 +38,7 @@ function textControl(id: string, label: string, type = 'search') {
   control.id = id; control.type = type; control.setAttribute('aria-label', label);
   return control;
 }
-for (const field of COLUMNS) {
+for (const field of TABLE_COLUMNS) {
   const heading = document.createElement('th'); heading.scope = 'col'; heading.dataset.field = field;
   const button = document.createElement('button'); button.type = 'button'; button.textContent = LABELS[field];
   button.addEventListener('click', () => {
@@ -50,7 +51,7 @@ for (const field of COLUMNS) {
     const control = textControl('filter-' + field, 'Filtr: ' + LABELS[field]);
     control.placeholder = field === 'contractNumber' ? 'Fragment numeru' : 'Szukaj…';
     cell.append(control);
-  } else if (DATE_FIELDS.includes(field as typeof DATE_FIELDS[number])) {
+  } else if (dateFields.includes(field as typeof dateFields[number])) {
     for (const [key, label] of [['from', 'Od'], ['to', 'Do']]) {
       const wrapper = document.createElement('label'); wrapper.textContent = label;
       wrapper.append(textControl(field + '-' + key, LABELS[field] + ': ' + label, 'date'));
@@ -81,7 +82,7 @@ function currentQuery(): PublicQuery {
   if (operator && Number.isFinite(amount.valueAsNumber)) {
     filters.amount = { operator: operator as '>' | '<', value: amount.valueAsNumber };
   }
-  for (const field of DATE_FIELDS) {
+  for (const field of dateFields) {
     const from = input(field + '-from').value, to = input(field + '-to').value;
     input(field + '-to').setCustomValidity(from && to && from > to ? 'Data końcowa nie może poprzedzać początkowej.' : '');
     if (from || to) filters.dates![field] = { from, to };
@@ -139,7 +140,7 @@ function renderWindow(rows: Entry[], offset: number) {
   const fragment = document.createDocumentFragment();
   function spacer(height: number) {
     const row = document.createElement('tr'); row.className = 'table-spacer'; row.setAttribute('aria-hidden', 'true');
-    const cell = document.createElement('td'); cell.colSpan = COLUMNS.length; cell.style.height = height + 'px';
+    const cell = document.createElement('td'); cell.colSpan = TABLE_COLUMNS.length; cell.style.height = height + 'px';
     row.append(cell); fragment.append(row);
   }
   if (bounds.top) spacer(bounds.top);
@@ -199,7 +200,7 @@ function start() {
     get('count').textContent = integer.format(total) + ' wpisów'; get('count').dataset.total = String(total);
     get('empty').hidden = total !== 0;
     more.hidden = bounds.visible >= total; more.disabled = false;
-    status.textContent = 'Wyniki obejmują cały zbiór.';
+    status.textContent = '';
     requestAnimationFrame(() => updateWindow());
   };
   send({ type: 'init', baseUrl: new URL(import.meta.env.BASE_URL, document.baseURI).href });
