@@ -1,0 +1,675 @@
+{
+  "measuredAt": "2026-09-09T18:41:21.829Z",
+  "browser": "153.0.8010.12",
+  "node": "v24.21.0",
+  "environment": {
+    "platform": "linux",
+    "release": "7.0.12-linuxkit",
+    "architecture": "arm64",
+    "cpus": 12,
+    "cpu": "unknown",
+    "totalMemoryBytes": 8319238144
+  },
+  "profile": "one",
+  "combine": "AND",
+  "cold": [
+    {
+      "workerCreatedMs": 41.20000000298023,
+      "events": [
+        {
+          "type": "ready",
+          "dispatchMs": 19.599853515625,
+          "workerMs": 513.699951171875,
+          "responseTransferMs": 0.300048828125,
+          "domMs": 0.400146484375,
+          "responseAndDomMs": 534,
+          "navigationToDomMs": 575.300048828125,
+          "throughTwoFramesMs": 8.5
+        },
+        {
+          "type": "result",
+          "requestId": 2,
+          "windowId": 0,
+          "total": 66343,
+          "dispatchMs": 0,
+          "workerMs": 65.89990234375,
+          "responseTransferMs": 0.199951171875,
+          "domMs": 3.300048828125,
+          "responseAndDomMs": 69.39990234375,
+          "navigationToDomMs": 644.699951171875,
+          "throughTwoFramesMs": 28.7001953125
+        }
+      ]
+    },
+    {
+      "workerCreatedMs": 38,
+      "events": [
+        {
+          "type": "ready",
+          "dispatchMs": 14.7998046875,
+          "workerMs": 523.699951171875,
+          "responseTransferMs": 0.30029296875,
+          "domMs": 0.39990234375,
+          "responseAndDomMs": 539.199951171875,
+          "navigationToDomMs": 577.199951171875,
+          "throughTwoFramesMs": 14.099853515625
+        },
+        {
+          "type": "result",
+          "requestId": 2,
+          "windowId": 0,
+          "total": 66343,
+          "dispatchMs": 0.099853515625,
+          "workerMs": 64.900146484375,
+          "responseTransferMs": 0.199951171875,
+          "domMs": 3.900146484375,
+          "responseAndDomMs": 69.10009765625,
+          "navigationToDomMs": 646.300048828125,
+          "throughTwoFramesMs": 35.800048828125
+        }
+      ]
+    },
+    {
+      "workerCreatedMs": 34.29999999701977,
+      "events": [
+        {
+          "type": "ready",
+          "dispatchMs": 15.199951171875,
+          "workerMs": 544.7998046875,
+          "responseTransferMs": 0.400146484375,
+          "domMs": 0.400146484375,
+          "responseAndDomMs": 560.800048828125,
+          "navigationToDomMs": 595.10009765625,
+          "throughTwoFramesMs": 15.300048828125
+        },
+        {
+          "type": "result",
+          "requestId": 2,
+          "windowId": 0,
+          "total": 66343,
+          "dispatchMs": 0.099853515625,
+          "workerMs": 72.199951171875,
+          "responseTransferMs": 0.2001953125,
+          "domMs": 3.39990234375,
+          "responseAndDomMs": 75.89990234375,
+          "navigationToDomMs": 671,
+          "throughTwoFramesMs": 22.39990234375
+        }
+      ]
+    }
+  ],
+  "queries": [
+    {
+      "caseId": "case",
+      "text": "pReSsCoM",
+      "scope": "contractorName",
+      "type": "result",
+      "requestId": 4,
+      "windowId": 0,
+      "total": 174,
+      "dispatchMs": -0.000244140625,
+      "workerMs": 12.199951171875,
+      "responseTransferMs": 42.500244140625,
+      "domMs": 5.599853515625,
+      "responseAndDomMs": 60.2998046875,
+      "navigationToDomMs": 975.89990234375,
+      "throughTwoFramesMs": 24.300048828125
+    },
+    {
+      "caseId": "delete",
+      "text": "prescom",
+      "scope": "contractorName",
+      "type": "result",
+      "requestId": 7,
+      "windowId": 0,
+      "total": 174,
+      "dispatchMs": 0.199951171875,
+      "workerMs": 8.5,
+      "responseTransferMs": 38.000244140625,
+      "domMs": 6.39990234375,
+      "responseAndDomMs": 53.10009765625,
+      "navigationToDomMs": 1136.5,
+      "throughTwoFramesMs": 29.5
+    },
+    {
+      "caseId": "topic",
+      "text": "remont",
+      "scope": "contractSubject",
+      "type": "result",
+      "requestId": 10,
+      "windowId": 0,
+      "total": 242,
+      "dispatchMs": 0,
+      "workerMs": 7.800048828125,
+      "responseTransferMs": 35.5,
+      "domMs": 7.60009765625,
+      "responseAndDomMs": 50.900146484375,
+      "navigationToDomMs": 1249.10009765625,
+      "throughTwoFramesMs": 25.10009765625
+    },
+    {
+      "caseId": "topic-swap",
+      "text": "remnot",
+      "scope": "contractSubject",
+      "type": "result",
+      "requestId": 13,
+      "windowId": 0,
+      "total": 0,
+      "dispatchMs": 0.099853515625,
+      "workerMs": 6,
+      "responseTransferMs": 36.60009765625,
+      "domMs": 1.7001953125,
+      "responseAndDomMs": 44.400146484375,
+      "navigationToDomMs": 1393.60009765625,
+      "throughTwoFramesMs": 20.60009765625
+    },
+    {
+      "caseId": "school",
+      "text": "remont szkoly",
+      "scope": "contractSubject",
+      "type": "result",
+      "requestId": 16,
+      "windowId": 0,
+      "total": 1,
+      "dispatchMs": 0.10009765625,
+      "workerMs": 6.89990234375,
+      "responseTransferMs": 7.800048828125,
+      "domMs": 0.5,
+      "responseAndDomMs": 15.300048828125,
+      "navigationToDomMs": 1477.699951171875,
+      "throughTwoFramesMs": 35.199951171875
+    },
+    {
+      "caseId": "training",
+      "text": "szkolenie",
+      "scope": "contractSubject",
+      "type": "result",
+      "requestId": 19,
+      "windowId": 0,
+      "total": 3317,
+      "dispatchMs": 0.099853515625,
+      "workerMs": 13.7001953125,
+      "responseTransferMs": 0.199951171875,
+      "domMs": 3.5,
+      "responseAndDomMs": 17.5,
+      "navigationToDomMs": 1582.699951171875,
+      "throughTwoFramesMs": 30.60009765625
+    },
+    {
+      "caseId": "global",
+      "text": "presscom szkolenie",
+      "scope": "global",
+      "type": "result",
+      "requestId": 22,
+      "windowId": 0,
+      "total": 132,
+      "dispatchMs": 0,
+      "workerMs": 16.300048828125,
+      "responseTransferMs": 31.199951171875,
+      "domMs": 5.800048828125,
+      "responseAndDomMs": 53.300048828125,
+      "navigationToDomMs": 1733.5,
+      "throughTwoFramesMs": 32
+    },
+    {
+      "caseId": "global-cross",
+      "text": "sportu koszykowki",
+      "scope": "global",
+      "type": "result",
+      "requestId": 25,
+      "windowId": 0,
+      "total": 51,
+      "dispatchMs": 0,
+      "workerMs": 16.39990234375,
+      "responseTransferMs": 25.7001953125,
+      "domMs": 4.300048828125,
+      "responseAndDomMs": 46.400146484375,
+      "navigationToDomMs": 1845.10009765625,
+      "throughTwoFramesMs": 19.699951171875
+    },
+    {
+      "caseId": "none",
+      "text": "qzxvjkqzxv",
+      "scope": "contractSubject",
+      "type": "result",
+      "requestId": 28,
+      "windowId": 0,
+      "total": 0,
+      "dispatchMs": 0.099853515625,
+      "workerMs": 7.300048828125,
+      "responseTransferMs": 14.500244140625,
+      "domMs": 1,
+      "responseAndDomMs": 22.900146484375,
+      "navigationToDomMs": 1936.60009765625,
+      "throughTwoFramesMs": 26.7998046875
+    }
+  ],
+  "memory": {
+    "before": {
+      "beforeGC": {
+        "main": {
+          "usedSize": 9077288,
+          "totalSize": 22343680,
+          "embedderHeapUsedSize": 16316624,
+          "backingStorageSize": 19683
+        },
+        "worker": {
+          "usedSize": 136448928,
+          "totalSize": 209264640,
+          "embedderHeapUsedSize": 605576,
+          "backingStorageSize": 23062
+        }
+      },
+      "afterGC": {
+        "main": {
+          "usedSize": 2363052,
+          "totalSize": 3207168,
+          "embedderHeapUsedSize": 7181952,
+          "backingStorageSize": 11239
+        },
+        "worker": {
+          "usedSize": 101849584,
+          "totalSize": 106827776,
+          "embedderHeapUsedSize": 27048,
+          "backingStorageSize": 23062
+        }
+      }
+    },
+    "after": {
+      "beforeGC": {
+        "main": {
+          "usedSize": 3227112,
+          "totalSize": 14016512,
+          "embedderHeapUsedSize": 20698616,
+          "backingStorageSize": 11284
+        },
+        "worker": {
+          "usedSize": 101960848,
+          "totalSize": 107089920,
+          "embedderHeapUsedSize": 477216,
+          "backingStorageSize": 23062
+        }
+      },
+      "afterGC": {
+        "main": {
+          "usedSize": 3150564,
+          "totalSize": 3792896,
+          "embedderHeapUsedSize": 19673256,
+          "backingStorageSize": 11257
+        },
+        "worker": {
+          "usedSize": 101849584,
+          "totalSize": 105254912,
+          "embedderHeapUsedSize": 27048,
+          "backingStorageSize": 23062
+        }
+      }
+    }
+  },
+  "scroll": [
+    {
+      "rows": 200,
+      "height": 25780,
+      "firstIndex": 1,
+      "lastIndex": 200,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 38580,
+      "firstIndex": 1,
+      "lastIndex": 300,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 51380,
+      "firstIndex": 101,
+      "lastIndex": 400,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 64180,
+      "firstIndex": 201,
+      "lastIndex": 500,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 76980,
+      "firstIndex": 301,
+      "lastIndex": 600,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 89780,
+      "firstIndex": 401,
+      "lastIndex": 700,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 102580,
+      "firstIndex": 501,
+      "lastIndex": 800,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 115380,
+      "firstIndex": 601,
+      "lastIndex": 900,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 128180,
+      "firstIndex": 701,
+      "lastIndex": 1000,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 140980,
+      "firstIndex": 801,
+      "lastIndex": 1100,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 153780,
+      "firstIndex": 901,
+      "lastIndex": 1200,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 166580,
+      "firstIndex": 1001,
+      "lastIndex": 1300,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 179380,
+      "firstIndex": 1101,
+      "lastIndex": 1400,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 192180,
+      "firstIndex": 1201,
+      "lastIndex": 1500,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 204980,
+      "firstIndex": 1301,
+      "lastIndex": 1600,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 217780,
+      "firstIndex": 1401,
+      "lastIndex": 1700,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 230580,
+      "firstIndex": 1501,
+      "lastIndex": 1800,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 243380,
+      "firstIndex": 1601,
+      "lastIndex": 1900,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 256180,
+      "firstIndex": 1701,
+      "lastIndex": 2000,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 268980,
+      "firstIndex": 1801,
+      "lastIndex": 2100,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 281780,
+      "firstIndex": 1901,
+      "lastIndex": 2200,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 294580,
+      "firstIndex": 2001,
+      "lastIndex": 2300,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 307380,
+      "firstIndex": 2101,
+      "lastIndex": 2400,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 320180,
+      "firstIndex": 2201,
+      "lastIndex": 2500,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 332980,
+      "firstIndex": 2301,
+      "lastIndex": 2600,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 345780,
+      "firstIndex": 2401,
+      "lastIndex": 2700,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 358580,
+      "firstIndex": 2501,
+      "lastIndex": 2800,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 371380,
+      "firstIndex": 2601,
+      "lastIndex": 2900,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 384180,
+      "firstIndex": 2701,
+      "lastIndex": 3000,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 396980,
+      "firstIndex": 2801,
+      "lastIndex": 3100,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 409780,
+      "firstIndex": 2901,
+      "lastIndex": 3200,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 422580,
+      "firstIndex": 3001,
+      "lastIndex": 3300,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 435380,
+      "firstIndex": 3101,
+      "lastIndex": 3400,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 448180,
+      "firstIndex": 3201,
+      "lastIndex": 3500,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "rows": 300,
+      "height": 460980,
+      "firstIndex": 3301,
+      "lastIndex": 3600,
+      "rowHeights": [
+        128
+      ]
+    }
+  ],
+  "first": "2026:5",
+  "restoredFirst": "2026:5",
+  "dimensions": [
+    {
+      "viewport": 1440,
+      "pageWidth": 1440,
+      "tableWidth": 1344,
+      "contentWidth": 2200,
+      "rowHeights": [
+        128
+      ]
+    },
+    {
+      "viewport": 390,
+      "pageWidth": 390,
+      "tableWidth": 354,
+      "contentWidth": 2200,
+      "rowHeights": [
+        128
+      ]
+    }
+  ],
+  "dialog": {
+    "height": 715,
+    "contentHeight": 3741,
+    "fields": 10,
+    "textLength": 4729
+  },
+  "manual": {
+    "departmentBeforeAmount": "WYDZIAŁ KADR I ORGANIZACJI (7288)",
+    "departmentAfterAmount": "WYDZIAŁ KADR I ORGANIZACJI (3479)",
+    "amountTotal": "3479",
+    "selectionPreservedAfterNameSearch": true,
+    "columnsReachedByTab": [
+      "Data zawarcia",
+      "Kontrahent",
+      "Przedmiot umowy",
+      "Poniesione wydatki",
+      "Wydział urzędu",
+      "Numer umowy",
+      "Tryb zawarcia",
+      "Rodzaj umowy",
+      "Obowiązuje od dnia",
+      "Obowiązuje do dnia"
+    ],
+    "dialogCloseButton": true
+  },
+  "errors": [],
+  "method": "Lokalny Chromium headless, HTTP 127.0.0.1, gzip, bez ograniczeń CPU/sieci, cache HTTP wyłączony. Każda próba tworzy nowy kontekst przeglądarki i worker (pusty cache HTTP). Pomiar zewnętrznym wrapperem, brak instrumentacji w produkcji. Czas workera do wywołania postMessage; transfer obejmuje serializację i kolejkę odbiorcy. domMs: synchroniczny handler UI; dwie klatki są przybliżeniem okazji do rysowania, nie pomiarem fizycznego obrazu. Pamięć: CDP Runtime.getHeapUsage osobno dla strony i workera, przed i po wymuszonym GC; nie całkowity RSS przeglądarki. Cache systemu plików i JIT procesu nie są resetowane między trzema próbami. Wąski viewport nie jest fizycznym telefonem."
+}

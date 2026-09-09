@@ -19,7 +19,9 @@
     "dev": "npm run prepare:site && vite --config vite.site.config.ts --host 0.0.0.0",
     "build": "npm run prepare:site && npm run typecheck && vite build --config vite.site.config.ts",
     "preview": "vite preview --config vite.site.config.ts --host 0.0.0.0",
-    "test:site:unit": "node --test tests/site/*.test.ts"
+    "test:site:unit": "node --test tests/site/*.test.ts",
+    "test:site:browser": "playwright test --config playwright.site.config.ts",
+    "measure:site": "node scripts/zmierz-strone.mjs"
   },
   "dependencies": {
     "minisearch": "7.2.0"
