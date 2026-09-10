@@ -4,7 +4,6 @@ Repozytorium zawiera 12 rocznych publikacji JSON z lat 2015–2026, skoroszyt Ex
 
 ## Dokumenty i wyniki
 
-- [Trzy propozycje wyglądu — interaktywne HTML](designs/index.html) · [opis i zakres makiet](designs/README.md).
 - [Weryfikacja strony: testy, pomiary i zrzuty](docs/weryfikacja-strony.md).
 - [Projekt strony i zatwierdzone decyzje](docs/projekt-strony.md).
 - [Plan implementacji publicznej przeglądarki](docs/plans/0001-przegladarka-wydatkow.md).

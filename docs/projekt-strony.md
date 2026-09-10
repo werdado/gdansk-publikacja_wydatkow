@@ -31,9 +31,9 @@ Ustawienia wyszukiwania rozstrzygnięto po POC. Plan zachowuje włączne granice
 
 ### Wybrany kierunek wizualny
 
-Użytkownik wybrał **03 — Otwarty notatnik**. Wzorcem jest [makieta HTML](../designs/03-notatnik.html): kremowe tło, ceglasty akcent, szeryfowe nagłówki, cienkie linie podziału i redakcyjny układ bez panelu bocznego. Zachować ten charakter w docelowej przeglądarce oraz jej widoku mobilnym.
+Użytkownik wybrał kierunek **Otwarty notatnik**: kremowe tło, ceglasty akcent, szeryfowe nagłówki, cienkie linie podziału i redakcyjny układ bez panelu bocznego. Zachować ten charakter w docelowej przeglądarce oraz jej widoku mobilnym.
 
-Makieta określa wygląd; produkcyjne wyszukiwanie, pełny zbiór danych i obsługę tabeli nadal określa plan implementacji.
+Produkcyjne wyszukiwanie, pełny zbiór danych i obsługę tabeli określa plan implementacji.
 
 ### Prezentacja wpisów
 
@@ -108,6 +108,5 @@ Wcześniejsze doświadczenie na pełnym zbiorze porównało cztery profile i dwa
 
 ## Powiązane dokumenty
 
-- [Trzy propozycje wyglądu](../designs/index.html) i [zakres makiet](../designs/README.md). Wybrano wariant 03 — Otwarty notatnik; makiety nie zmieniają zatwierdzonych zasad wyszukiwania.
 - [Słownik pojęć](../CONTEXT.md).
 - [Analiza danych i dotychczasowe ustalenia dotyczące skoroszytu](analiza-danych.md).

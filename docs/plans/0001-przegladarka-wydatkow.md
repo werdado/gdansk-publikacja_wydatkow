@@ -8,13 +8,13 @@
 
 **Stos technologiczny:** HTML/CSS/TypeScript 7.0.2, Vite 8.2.2, MiniSearch 7.2.0, Node.js ≥24, jeden Web Worker; Playwright 1.63.0 do kontroli przeglądarkowej. Zachować dokładne wersje i `package-lock.json`.
 
-## Wybrany wygląd — 03 „Otwarty notatnik”
+## Wybrany wygląd — „Otwarty notatnik”
 
-Wzorcem wizualnym jest [makieta 03](../../designs/03-notatnik.html) i wspólne style bazowe wraz z regułami `.editorial` w `designs/shared.css`. Użytkownik wybrał kremowe tło, ceglasty akcent, szeryfowe nagłówki i redakcyjny układ bez panelu bocznego.
+Użytkownik wybrał kremowe tło, ceglasty akcent, szeryfowe nagłówki i redakcyjny układ bez panelu bocznego.
 
-W zadaniu 4 dostosować poniższy szkielet HTML i CSS do tego wzorca; przykładowy wygląd z POC nie jest docelowy. Zachować kontrakt kontrolek, dostępność, obsługę Workera oraz wysokość wierszy wymaganą przez wirtualizację. Przenieść wygląd nagłówka, wyszukiwarki, tabeli i dialogu, pomijając pasek propozycji i komunikaty o próbce. Korzystać z pełnego zbioru i zatwierdzonego silnika, bez przenoszenia demonstracyjnego `designs/shared.js`.
+W zadaniu 4 dostosować poniższy szkielet HTML i CSS do tego kierunku. Zachować kontrakt kontrolek, dostępność, obsługę Workera oraz wysokość wierszy wymaganą przez wirtualizację. Zastosować ten wygląd w nagłówku, wyszukiwarce, tabeli i dialogu. Korzystać z pełnego zbioru i zatwierdzonego silnika.
 
-Przy odbiorze zadania 5 porównać stronę z makietą na komputerze i przy szerokości 390 px. Zrzuty wzorca są w `designs/previews/03-notatnik-desktop.png` i `designs/previews/03-notatnik-mobile.png`.
+Przy odbiorze zadania 5 sprawdzić stronę na komputerze i przy szerokości 390 px.
 
 ## Ograniczenia wspólne
 
@@ -656,12 +656,7 @@ start();
 
 Odpowiedzi nie przechowują historii wpisów w interfejsie. Dane pochodzące z JSON trafiają do textContent. Kontrolki kwot i dat korzystają z walidacji formularza; zmiana lub wyczyszczenie filtrów zachowuje sortowanie.
 
-- [ ] Utworzyć site/style.css w stylistyce wybranego wariantu 03, zgodnie z sekcją „Wybrany wygląd”. Poniższe kopiowanie stylów POC jest jedynie bazą techniczną; zastąpić ich kolorystykę i typografię wzorcem `designs/shared.css` (style bazowe i `.editorial`). Zachować poniższe reguły geometrii i dostępności:
-
-~~~sh
-mkdir -p site
-cp poc/style.css site/style.css
-~~~
+- [ ] Utworzyć `site/style.css` w stylistyce opisanej w sekcji „Wybrany wygląd”. Zachować poniższe reguły geometrii i dostępności:
 
 ~~~css
 [hidden] { display: none !important; }
