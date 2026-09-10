@@ -1,4 +1,5 @@
 name: Publikacja rejestru wydatków
+run-name: Ręczna publikacja rejestru wydatków
 on:
   workflow_dispatch:
 permissions:
