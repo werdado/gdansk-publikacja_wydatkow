@@ -33,9 +33,9 @@ Gotowe pliki są w `dist/`; publikuj cały ten katalog, łącznie z `generated/`
 
 ## GitHub Pages
 
-Workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml) uruchamia się wyłącznie ręcznie (`workflow_dispatch`). Po podłączeniu repozytorium do GitHub ustaw w Pages źródło publikacji na „GitHub Actions”, a następnie uruchom workflow z karty Actions. Najpierw wykonuje on `npm ci`, testy jednostkowe, build i testy Chromium, a dopiero potem przekazuje `dist/` do Pages.
+Workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml) uruchamia się wyłącznie ręcznie (`workflow_dispatch`). Po podłączeniu repozytorium do GitHub ustaw w Pages źródło publikacji na „Deploy from a branch”, wybierz gałąź `gh_pages` i katalog `/(root)`, a następnie uruchom workflow z karty Actions. Najpierw wykonuje on `npm ci`, testy jednostkowe, build i testy Chromium, a dopiero potem publikuje zawartość `dist/` w gałęzi `gh_pages`.
 
-Wejściem CI są śledzone pliki `data/`, skoroszyt, loader `scripts/dane.ts`, źródła `src/` i `site/`, konfiguracja oraz `package-lock.json`. Artefaktem jest wyłącznie `dist/`; zawiera stronę, pliki potrzebne wyszukiwarce, skoroszyt oraz źródłowe pliki JSON. Nie zawiera `node_modules` ani skryptów narzędziowych. W repozytorium nie ma jeszcze zdalnego adresu, dlatego workflow nie określa ani nie zakłada adresu przyszłej publikacji.
+Wejściem CI są śledzone pliki `data/`, skoroszyt, loader `scripts/dane.ts`, źródła `src/` i `site/`, konfiguracja oraz `package-lock.json`. Do gałęzi publikacyjnej trafia wyłącznie zawartość `dist/`: strona, pliki potrzebne wyszukiwarce, skoroszyt oraz źródłowe pliki JSON. Nie trafiają do niej `node_modules` ani skrypty narzędziowe. Publikacja dodaje plik `.nojekyll`, dzięki czemu GitHub Pages nie przetwarza strony przez Jekyll. Workflow nie zakłada adresu przyszłej publikacji; względna baza zasobów pozwala obsłużyć zarówno witrynę użytkownika lub organizacji, jak i witrynę projektu.
 
 `base: './'` pozwala umieścić gotowy katalog również pod zagnieżdżoną ścieżką. Lokalna kontrola opisana w [weryfikacji strony](docs/weryfikacja-strony.md#pakiet-statyczny-w-podkatalogu) umieszcza `dist/` pod `/rejestr/` i sprawdza wejście oraz odświeżenie, wraz z workerem, manifestem i danymi gzip.
 
