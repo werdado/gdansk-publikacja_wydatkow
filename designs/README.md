@@ -12,9 +12,9 @@ Otwórz [porównanie](index.html) bezpośrednio w przeglądarce. Pliki działaj�
 
 W każdym wariancie działa wyszukiwarka, dziesięć filtrów kolumn, sortowanie, usuwanie filtrów, podgląd pełnej treści oraz doładowanie kolejnych 100 wierszy przez przewijanie lub przycisk. Sortowanie zachowuje filtry, a filtrowanie zachowuje sortowanie. Na telefonie tabela przewija się poziomo. Przełączników tolerancji literówek ani AND/OR nie ma.
 
-Makiety korzystają z tej samej próbki 300 rzeczywistych rekordów: pierwszych 25 pozycji z każdego pliku rocznego, po korektach istniejącego loadera POC. Nie jest to próbka reprezentatywna. Liczba 66 343 opisuje pełny zbiór, natomiast tabela, liczniki wyników i facety opisują wyłącznie próbkę. Lista wydziałów zawiera nazwy obecne w próbce, nie wszystkie 41 nazw pełnego zbioru.
+Makiety korzystają z tej samej próbki 300 rzeczywistych rekordów: pierwszych 25 pozycji z każdego pliku rocznego, po korektach loadera danych. Nie jest to próbka reprezentatywna. Liczba 66 343 opisuje pełny zbiór, natomiast tabela, liczniki wyników i facety opisują wyłącznie próbkę. Lista wydziałów zawiera nazwy obecne w próbce, nie wszystkie 41 nazw pełnego zbioru.
 
-Wspólny skrypt makiet używa prostego dopasowania słów AND z tolerancją jednej edycji, prefiksami od trzech znaków i normalizacją polskich znaków. To demonstracja zachowania kontrolek; ocenę jakości wyszukiwania należy prowadzić w istniejącym POC, a implementację docelową oprzeć na zatwierdzonym silniku MiniSearch. Makiety nie zastępują planu produkcyjnego, nie mierzą wydajności pełnego zbioru i nie używają Workera ani wirtualizacji tabeli.
+Wspólny skrypt makiet używa prostego dopasowania słów AND z tolerancją jednej edycji, prefiksami od trzech znaków i normalizacją polskich znaków. To demonstracja zachowania kontrolek; implementacja docelowa korzysta z silnika MiniSearch. Makiety nie mierzą wydajności pełnego zbioru i nie używają Workera ani wirtualizacji tabeli.
 
 Nie dodano wykresów, sum wydatków ani nowych podstron. Znak „G.” jest roboczym znakiem typograficznym projektu, nie oficjalnym herbem lub identyfikacją urzędu. Nie użyto zewnętrznych fontów ani zasobów.
 

@@ -1,8 +1,6 @@
 node_modules/
 .DS_Store
 .worktrees/
-dist-poc/
-poc/public/generated/
 /site/public/generated/
 /site/public/data/
 /site/public/wydatki-gdanska_2015-2026.xlsx

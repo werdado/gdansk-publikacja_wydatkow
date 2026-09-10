@@ -3,7 +3,18 @@ import { chromium, expect } from '@playwright/test';
 import { preview } from 'vite';
 import { mkdir, writeFile } from 'node:fs/promises';
 import os from 'node:os';
-import { CASES } from '../poc/search/cases.ts';
+
+const CASES = [
+  { id: 'case', text: 'pReSsCoM', scope: 'contractorName' },
+  { id: 'delete', text: 'prescom', scope: 'contractorName' },
+  { id: 'topic', text: 'remont', scope: 'contractSubject' },
+  { id: 'topic-swap', text: 'remnot', scope: 'contractSubject' },
+  { id: 'school', text: 'remont szkoly', scope: 'contractSubject' },
+  { id: 'training', text: 'szkolenie', scope: 'contractSubject' },
+  { id: 'global', text: 'presscom szkolenie', scope: 'global' },
+  { id: 'global-cross', text: 'sportu koszykowki', scope: 'global' },
+  { id: 'none', text: 'qzxvjkqzxv', scope: 'contractSubject' },
+];
 
 const output = 'docs/wyniki-strony';
 await mkdir(output, { recursive: true });

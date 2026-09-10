@@ -35,15 +35,15 @@ Przy odbiorze zadania 5 porównać stronę z makietą na komputerze i przy szero
 - `contractDisclaimer` nie jest kontrolką ani kolumną docelowej strony; jego wartość pozostaje w danych źródłowych.
 - Zachować wszystkie wpisy, pełne teksty, stabilne identyfikatory `rok:pozycja`, uzgodnione sześć korekt dat i kwoty z dwoma miejscami po przecinku. Nie rozdzielać opisów zawierających fragmenty innych wpisów.
 - Interfejs i dokumentacja po polsku. Zachować znaczenie „poniesione wydatki”; nie dopisywać niepotwierdzonej waluty ani „roku płatności”.
-- Wynik to zwykłe pliki statyczne. Laboratorium pozostaje dostępne lokalnie, a jego przełączniki profili, AND/OR, pomiary i oceny nie trafiają do interfejsu publicznego.
+- Wynik to zwykłe pliki statyczne. Przełączniki profili, AND/OR, pomiary i oceny nie trafiają do interfejsu publicznego.
 
 ---
 
 ## Stan początkowy i dowody
 
-Przeczytać [projekt](../projekt-strony.md), [raport POC](../poc-wyszukiwania.md), [analizę źródeł](../analiza-danych.md) i [słownik](../../CONTEXT.md).
+Przeczytać [projekt](../projekt-strony.md), [analizę źródeł](../analiza-danych.md) i [słownik](../../CONTEXT.md).
 
-Istnieją działające: loader `scripts/dane-poc.ts`, silnik `poc/search/engine.ts`, worker `poc/search/worker.ts`, interfejs `poc/main.ts`, 12 testów wyszukiwania i pięć testów Chromium. POC domyślnie ma już AND i jedną edycję. Wykorzystać te elementy, zachowując możliwość ponownego uruchomienia doświadczenia.
+Docelowa implementacja zachowuje zatwierdzone ustawienia AND i jednej edycji.
 
 POC zmierzył około 178 MB sterty Node.js po GC i 51,78 MB danych wraz z indeksem przed kompresją. Dlatego plan obejmuje kompresję plików i ograniczenie DOM. Są to środki wynikające z pomiarów; nie zastępują późniejszego sprawdzenia fizycznego telefonu.
 
@@ -53,8 +53,7 @@ Repozytorium nie ma skonfigurowanego zdalnego adresu; lokalna gałąź to `maste
 
 | Plik | Odpowiedzialność |
 | --- | --- |
-| `src/search/model.ts`, `src/search/engine.ts` | Wspólny model i sprawdzony silnik przeniesione z POC |
-| `poc/search/model.ts`, `poc/search/engine.ts` | Krótkie reeksporty dla istniejącego laboratorium i testów |
+| `src/search/model.ts`, `src/search/engine.ts` | Wspólny model i sprawdzony silnik wyszukiwania |
 | `src/search/public-query.ts` | Stały profil publiczny i jednoczesne zapytania kolumn |
 | `src/search/transport.ts` | Odczyt przygotowanych danych, gzip i błędy pobrania |
 | `src/search/protocol.ts`, `src/search/worker.ts` | Typowane komunikaty, pełne wyniki w workerze, pobieranie okna wierszy |
@@ -70,29 +69,9 @@ Zależności zadań: 1 → 2 → 3 → 4 → 5 → 6. Każde zadanie kończy si�
 
 ## Zadanie 1: wspólny silnik i równoczesne filtry tekstowe
 
-**Pliki:** utworzyć `src/search/model.ts`, `src/search/engine.ts`, `src/search/public-query.ts`; zmienić odpowiednie dwa pliki w `poc/search/` oraz `poc/tests/search.test.ts`.
+**Pliki:** utworzyć `src/search/model.ts`, `src/search/engine.ts`, `src/search/public-query.ts` oraz `tests/search.test.ts`.
 
 **Interfejsy:** istniejące `Entry`, `Query`, `Result`, `SearchEngine.search(Query): Result` pozostają dostępne. Dodać `Query.columns?: Partial<Record<FuzzyField | 'contractNumber', string>>` i `publicQuery(PublicQuery): Query`.
-
-- [ ] Przenieść silnik bez przepisywania istniejących algorytmów:
-
-```sh
-mkdir -p src/search
-cp poc/search/model.ts src/search/model.ts
-cp poc/search/engine.ts src/search/engine.ts
-```
-
-Cała nowa zawartość plików zgodności:
-
-```ts
-// poc/search/model.ts
-export * from '../../src/search/model.ts';
-```
-
-```ts
-// poc/search/engine.ts
-export * from '../../src/search/engine.ts';
-```
 
 - [ ] Do `Query` w przeniesionym modelu dodać:
 
@@ -110,7 +89,7 @@ export function publicQuery(query: PublicQuery): Query {
 }
 ```
 
-- [ ] Dopisać do istniejącego `poc/tests/search.test.ts` test wykorzystujący jego `engine` i funkcję `query`:
+- [ ] Dopisać do `tests/search.test.ts` test wykorzystujący `engine` i funkcję `query`:
 
 ```ts
 test('globalne zapytanie i dwie kolumny obowiązują jednocześnie', () => {
@@ -143,13 +122,13 @@ if (!columnSets.every(ids => ids.has(hit.id))) return false;
 
 Wstawienie tego warunku przed kwotą, datami i zliczaniem wydziałów zachowuje poprawne liczebności faset. Nie wykonywać osobnego sortowania dla każdej kolumny.
 
-- [ ] Uruchomić `npm test`, `npm run typecheck` i `npm run evaluate:search`. Stare wyniki jakości dla 32 przypadków muszą zachować liczebności. Nowy test ma przejść. Zapisać jeden commit obejmujący wyłącznie pliki tego zadania.
+- [ ] Uruchomić `npm test` i `npm run typecheck`. Nowy test ma przejść. Zapisać jeden commit obejmujący wyłącznie pliki tego zadania.
 
 ## Zadanie 2: przygotowanie i transport statycznych danych
 
 **Pliki:** utworzyć `scripts/przygotuj-strone.ts`, `src/search/transport.ts`, `tests/site/transport.test.ts`; rozszerzyć `tsconfig.json`, `package.json` i `.gitignore`.
 
-**Interfejsy:** wykorzystać istniejące `loadSource()` i `ROOT` z `scripts/dane-poc.ts`. Manifest produkcyjny ma `count`, `sources`, `corrections` i `files: { records: string; index: string }`; nazwy w `files` kończą się na `.json` i mają również odpowiednik `.json.gz`.
+**Interfejsy:** wykorzystać istniejące `loadSource()` i `ROOT` z `scripts/dane.ts`. Manifest produkcyjny ma `count`, `sources`, `corrections` i `files: { records: string; index: string }`; nazwy w `files` kończą się na `.json` i mają również odpowiednik `.json.gz`.
 
 - [ ] Utworzyć generator:
 
@@ -159,7 +138,7 @@ import { mkdir, rm, writeFile } from 'node:fs/promises';
 import { gzipSync } from 'node:zlib';
 import MiniSearch from 'minisearch';
 import { INDEX_OPTIONS } from '../src/search/engine.ts';
-import { loadSource, ROOT } from './dane-poc.ts';
+import { loadSource, ROOT } from './dane.ts';
 
 const { rows, sources, corrections } = await loadSource();
 const index = new MiniSearch(INDEX_OPTIONS);
@@ -731,17 +710,17 @@ export default defineConfig({
 }
 ~~~
 
-Są to dodatkowe wpisy w scripts. Pozostawić polecenia POC.
+Są to dodatkowe wpisy w scripts.
 
-- [ ] Uruchomić npm test, npm run test:site:unit, npm run build i npm run build:poc. Oba warianty mają się budować. Otworzyć publiczny podgląd i potwierdzić 100 pierwszych wpisów bez kontrolek laboratoryjnych. Zapisać commit zadania.
+- [ ] Uruchomić npm test, npm run test:site:unit i npm run build. Otworzyć publiczny podgląd i potwierdzić 100 pierwszych wpisów bez kontrolek laboratoryjnych. Zapisać commit zadania.
 
 ## Zadanie 5: sprawdzenie całego przepływu i kosztów przewijania
 
 **Pliki:** utworzyć `playwright.site.config.ts`, `tests/site/browser/site.spec.ts` oraz `docs/weryfikacja-strony.md`; rozszerzyć `package.json` i `README.md`.
 
-**Interfejsy:** sprawdzać publiczne kontrolki, `tr.entry-row`, identyfikatory `data-id`, `#count[data-total]` i natywny dialog. W `site/main.ts` zachować istniejące atrybuty POC `html[data-ready]`, `tbody[data-request]`, `aria-busy` i licznik; nie eksponować nowych kontrolek debugowania.
+**Interfejsy:** sprawdzać publiczne kontrolki, `tr.entry-row`, identyfikatory `data-id`, `#count[data-total]` i natywny dialog. W `site/main.ts` zachować istniejące atrybuty `html[data-ready]`, `tbody[data-request]`, `aria-busy` i licznik; nie eksponować nowych kontrolek debugowania.
 
-- [ ] Utworzyć osobną konfigurację na porcie 4174, aby nie kolidowała z POC:
+- [ ] Utworzyć osobną konfigurację na porcie 4174:
 
 ```ts
 import { defineConfig } from '@playwright/test';
@@ -820,7 +799,7 @@ test('błąd pobrania nie pokazuje niepełnych wyników', async ({ page }) => {
 });
 ```
 
-Liczba 131 pochodzi z przecięcia wyników istniejącego POC: `prescom` w kolumnie kontrahenta i `szkolenie` w przedmiocie, oba z profilem `one` i AND. To oczekiwanie regresji zachowania tekstowego, nie niezależna ocena trafności znaczeniowej.
+Liczba 131 pochodzi z przecięcia wyników: `prescom` w kolumnie kontrahenta i `szkolenie` w przedmiocie, oba z profilem `one` i AND. To oczekiwanie regresji zachowania tekstowego, nie niezależna ocena trafności znaczeniowej.
 
 - [ ] Dopisać test ograniczenia DOM i powrotu do pierwszego wpisu:
 
@@ -849,12 +828,11 @@ npm test
 npm run test:site:unit
 npm run build
 npm run test:site:browser
-npm run build:poc
 ```
 
-- [ ] W `docs/weryfikacja-strony.md` zapisać rzeczywiste środowisko, czasy zimnego uruchomienia, dziewięć zapytań POC z profilem `one`, zużycie pamięci przed i po długim przewijaniu oraz liczbę wierszy DOM. Oddzielić czas workera od przesłania odpowiedzi i renderowania. Nie porównywać bezpośrednio nowych wyników `one` ze starym browserowym profilem `adaptive` bez oznaczenia tej różnicy.
+- [ ] W `docs/weryfikacja-strony.md` zapisać rzeczywiste środowisko, czasy zimnego uruchomienia, dziewięć zapytań z profilem `one`, zużycie pamięci przed i po długim przewijaniu oraz liczbę wierszy DOM. Oddzielić czas workera od przesłania odpowiedzi i renderowania.
 - [ ] Sprawdzić stronę na dostępnym fizycznym telefonie i zapisać model, przeglądarkę oraz warunki sieci. Jeżeli takiego urządzenia nie ma, oznaczyć tę kontrolę jako niewykonaną i nie opisywać viewportu 390 px jako pomiaru telefonu. To kontrola odbioru wersji mobilnej, nie przeszkoda w ukończeniu kodu i plików statycznych.
-- [ ] Uzupełnić `README.md` o polecenia `npm run dev`, `npm run build`, `npm run preview` oraz opis filtrów AND i tolerancji jednej edycji. Zachować odnośniki do POC i dotychczasowego skoroszytu. Zapisać commit zadania.
+- [ ] Uzupełnić `README.md` o polecenia `npm run dev`, `npm run build`, `npm run preview` oraz opis filtrów AND i tolerancji jednej edycji. Zachować odnośnik do skoroszytu. Zapisać commit zadania.
 
 ## Zadanie 6: sprawdzalny pakiet statyczny i GitHub Pages
 

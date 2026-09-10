@@ -1,6 +1,6 @@
 # Rejestr wydatków Gdańska
 
-Repozytorium zawiera 12 rocznych publikacji JSON z lat 2015–2026, skoroszyt Excel oraz publiczną przeglądarkę danych i POC wyszukiwania. Każdy z 66 343 wpisów źródłowych pozostaje osobną pozycją. Publikacja za 2026 rok obejmuje dane do 29 lipca.
+Repozytorium zawiera 12 rocznych publikacji JSON z lat 2015–2026, skoroszyt Excel oraz publiczną przeglądarkę danych. Każdy z 66 343 wpisów źródłowych pozostaje osobną pozycją. Publikacja za 2026 rok obejmuje dane do 29 lipca.
 
 ## Dokumenty i wyniki
 
@@ -8,8 +8,6 @@ Repozytorium zawiera 12 rocznych publikacji JSON z lat 2015–2026, skoroszyt Ex
 - [Weryfikacja strony: testy, pomiary i zrzuty](docs/weryfikacja-strony.md).
 - [Projekt strony i zatwierdzone decyzje](docs/projekt-strony.md).
 - [Plan implementacji publicznej przeglądarki](docs/plans/0001-przegladarka-wydatkow.md).
-- [POC: uruchomienie, metoda, wnioski i ograniczenia](docs/poc-wyszukiwania.md).
-- [Automatyczna ocena 32 zapytań](docs/wyniki-poc/wyszukiwanie.md).
 - [Analiza danych i korekty dat](docs/analiza-danych.md).
 - [Słownik pojęć](CONTEXT.md).
 - [Skoroszyt 2015–2026](wydatki-gdanska_2015-2026.xlsx).
@@ -38,7 +36,7 @@ Gotowe pliki są w `dist/`; publikuj cały ten katalog, łącznie z `generated/`
 
 Workflow [`.github/workflows/pages.yml`](.github/workflows/pages.yml) uruchamia się wyłącznie ręcznie (`workflow_dispatch`). Po podłączeniu repozytorium do GitHub ustaw w Pages źródło publikacji na „GitHub Actions”, a następnie uruchom workflow z karty Actions. Najpierw wykonuje on `npm ci`, testy jednostkowe, build i testy Chromium, a dopiero potem przekazuje `dist/` do Pages.
 
-Wejściem CI są śledzone pliki `data/`, skoroszyt, współdzielony loader `scripts/dane-poc.ts`, źródła `src/` i `site/`, konfiguracja oraz `package-lock.json`. Artefaktem jest wyłącznie `dist/`; zawiera stronę, pliki potrzebne wyszukiwarce, skoroszyt oraz źródłowe pliki JSON. Nie zawiera `node_modules`, laboratorium POC ani skryptów narzędziowych. W repozytorium nie ma jeszcze zdalnego adresu, dlatego workflow nie określa ani nie zakłada adresu przyszłej publikacji.
+Wejściem CI są śledzone pliki `data/`, skoroszyt, loader `scripts/dane.ts`, źródła `src/` i `site/`, konfiguracja oraz `package-lock.json`. Artefaktem jest wyłącznie `dist/`; zawiera stronę, pliki potrzebne wyszukiwarce, skoroszyt oraz źródłowe pliki JSON. Nie zawiera `node_modules` ani skryptów narzędziowych. W repozytorium nie ma jeszcze zdalnego adresu, dlatego workflow nie określa ani nie zakłada adresu przyszłej publikacji.
 
 `base: './'` pozwala umieścić gotowy katalog również pod zagnieżdżoną ścieżką. Lokalna kontrola opisana w [weryfikacji strony](docs/weryfikacja-strony.md#pakiet-statyczny-w-podkatalogu) umieszcza `dist/` pod `/rejestr/` i sprawdza wejście oraz odświeżenie, wraz z workerem, manifestem i danymi gzip.
 
@@ -56,16 +54,3 @@ npm run measure:site
 ```
 
 Testy strony i skrypt pomiarowy uruchamiają własny podgląd na porcie 4174; port musi być wolny. Pomiary i zrzuty zapisują się w `docs/wyniki-strony/`. Szczegóły metody i ograniczenia są w [dokumencie weryfikacji](docs/weryfikacja-strony.md).
-
-## Uruchomienie POC
-
-Wymagane Node.js 24 lub nowsze:
-
-```sh
-npm ci
-npm run dev:poc
-```
-
-Otwórz adres podany przez Vite, zwykle `http://localhost:5173`. W kontenerze skorzystaj z przekierowania portu.
-
-Strona i dokumentacja są po polsku. POC umożliwia porównanie ustawień MiniSearch, przeglądanie dopasowanych wpisów i eksport własnych ocen jakości. Domyślnie stosuje zatwierdzone AND i tolerancję jednej edycji. Publiczna strona korzysta ze stałych ustawień; POC zachowuje kontrolki porównawcze.

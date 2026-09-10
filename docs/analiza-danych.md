@@ -80,7 +80,7 @@ Korekty dotyczą wartości w skoroszycie. Powyższa tabela zachowuje oryginalne 
 
 ## Uzgodniony zakres
 
-Dodatkowa analiza podczas POC strony wykryła 14 opisów zawierających fragmenty przypominające inne wpisy rozdzielane tyldami. Ich identyfikatory, metodę wykrycia i konsekwencje dla wyszukiwania opisano w [raporcie POC](poc-wyszukiwania.md#znaczenie-opisów-i-jakość-źródeł). Nie rozdzielano tych opisów na dodatkowe rekordy.
+Dodatkowa analiza wykryła 14 opisów zawierających fragmenty przypominające inne wpisy rozdzielane tyldami. Nie rozdzielano tych opisów na dodatkowe rekordy.
 
 - Jeden skoroszyt Excel w formacie `.xlsx`.
 - Osobna zakładka dla każdego roku źródłowego: od 2026 do 2015, w kolejności malejącej.

@@ -15,11 +15,10 @@ npm test
 npm run test:site:unit
 npm run build
 npm run test:site:browser
-npm run build:poc
 npm run measure:site
 ```
 
-Port 4174 musi być wolny. Konfiguracja testów nie przejmuje istniejącego serwera; POC ma odrębną konfigurację. Skrypt `scripts/zmierz-strone.mjs` uruchamia i zamyka własny podgląd. Pomiary nadpisują plik JSON i pięć zrzutów w `docs/wyniki-strony/`.
+Port 4174 musi być wolny. Konfiguracja testów nie przejmuje istniejącego serwera. Skrypt `scripts/zmierz-strone.mjs` uruchamia i zamyka własny podgląd. Pomiary nadpisują plik JSON i pięć zrzutów w `docs/wyniki-strony/`.
 
 ## Zimne uruchomienie
 
@@ -33,7 +32,7 @@ Trzy próby w nowych kontekstach przeglądarki z pustym cache HTTP i nowymi work
 
 Inicjalizacja workera obejmuje pobranie manifestu, danych i indeksu, dekompresję, parsowanie i odtworzenie silnika. Pierwsze wyszukiwanie oblicza pełny wynik, kolejność i liczebności wydziałów. Czasy przesłania nie obejmują pobierania plików HTTP — to przesłanie odpowiedzi workera do głównego wątku.
 
-## Dziewięć zapytań POC na stronie z profilem one
+## Dziewięć zapytań testowych na stronie z profilem one
 
 | ID | Zapytanie | Pole | Wyniki | Worker (ms) | Transfer odpowiedzi (ms) | DOM (ms) | Wysłanie → DOM (ms) | Odbiór → dwie klatki (ms) |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -47,13 +46,13 @@ Inicjalizacja workera obejmuje pobranie manifestu, danych i indeksu, dekompresj�
 | global-cross | `sportu koszykowki` | `global` | 51 | 16.40 | 25.70 | 4.30 | 46.40 | 19.70 |
 | none | `qzxvjkqzxv` | `contractSubject` | 0 | 7.30 | 14.50 | 1.00 | 22.90 | 26.80 |
 
-Każde zapytanie wykonano raz przez publiczne pola i przycisk „Szukaj”, po usunięciu poprzedniego zapytania. Profile i pola pochodzą z `poc/search/cases.ts`; parametrów `one` i AND nie można zmienić w produkcyjnej stronie. Liczba 131 dla jednoczesnych filtrów `prescom` (kontrahent) i `szkolenie` (przedmiot) jest osobnym oczekiwaniem regresji z POC, sprawdzanym w teście przeglądarkowym. Nie jest niezależną oceną trafności znaczeniowej.
+Każde zapytanie wykonano raz przez publiczne pola i przycisk „Szukaj”, po usunięciu poprzedniego zapytania. Przypadki pomiarowe są zdefiniowane w `scripts/zmierz-strone.mjs`; parametrów `one` i AND nie można zmienić w produkcyjnej stronie. Liczba 131 dla jednoczesnych filtrów `prescom` (kontrahent) i `szkolenie` (przedmiot) jest osobnym oczekiwaniem regresji, sprawdzanym w teście przeglądarkowym. Nie jest niezależną oceną trafności znaczeniowej.
 
 Pomiar zewnętrzny zastępuje konstruktor Worker wyłącznie w kontrolowanej sesji przeglądarki. Uruchamia ten sam produkcyjny moduł i dodaje znaczniki do odpowiedzi. `workerMs` obejmuje obsługę zapytania do wywołania `postMessage`, w tym przygotowanie strony wyników. `responseTransferMs` obejmuje klonowanie danych, przesłanie i oczekiwanie głównego wątku. `domMs` to synchroniczne wykonanie handlera strony (wiersze, licznik, lista wydziałów). Suma od wysłania obejmuje też kolejkę wejściową workera. Znaczniki obu wątków używają `performance.timeOrigin + performance.now()`; wartości bliskie zeru podlegają zaokrągleniu zegara.
 
 Dwie klatki `requestAnimationFrame` mierzą czas do kolejnej okazji rysowania po zmianie DOM; nie dowodzą czasu zakończenia kompozycji ani wyświetlenia obrazu na fizycznym ekranie. Instrumentacja i sterowanie przeglądarką dokładają narzut. Są to pojedyncze obserwacje, bez percentyli i bez deklaracji limitu wydajności.
 
-Poprzedni plik [przegladarka-zapytania.json](wyniki-poc/przegladarka-zapytania.json) był mierzony z profilem **adaptive**. Nowe wyniki dotyczą **one**: np. `remnot` daje 0 zamiast dawnych 56, a `szkolenie` 3317 zamiast 3425. Różne profile oraz zakres mierzonej obsługi workera wykluczają bezpośredni wniosek o przyspieszeniu lub spowolnieniu. Profil one nie toleruje dwóch edycji w zamianie sąsiednich liter.
+Profil one nie toleruje dwóch edycji w zamianie sąsiednich liter.
 
 ## Długie przewijanie i pamięć
 
@@ -123,7 +122,7 @@ Do odtworzenia kontroli zbuduj stronę, skopiuj całą zawartość `dist/` do `p
 
 Plik [`.github/workflows/pages.yml`](../.github/workflows/pages.yml) jest ręcznie uruchamianym workflow. Po skonfigurowaniu repozytorium na GitHub i wybraniu „GitHub Actions” jako źródła Pages buduje oraz sprawdza stronę, po czym przesyła wyłącznie `dist/` do GitHub Pages. Obecnie nie ma skonfigurowanego zdalnego repozytorium, więc nie wykonano publikacji i nie podano adresu strony.
 
-Kontrola wejść CI (`git ls-files --error-unmatch`) potwierdziła śledzenie 12 plików JSON i `data/index.html`, skoroszytu, `scripts/dane-poc.ts`, `scripts/przygotuj-strone.ts`, `src/`, `site/`, `vite.site.config.ts` oraz `package-lock.json`. Generator kopiuje skoroszyt i cały katalog `data/` do wyniku. `dist/` i kopie w `site/public/` są poprawnie ignorowanymi wynikami budowania; `node_modules/`, POC i skrypty narzędziowe nie są częścią artefaktu Pages.
+Kontrola wejść CI (`git ls-files --error-unmatch`) potwierdziła śledzenie 12 plików JSON i `data/index.html`, skoroszytu, `scripts/dane.ts`, `scripts/przygotuj-strone.ts`, `src/`, `site/`, `vite.site.config.ts` oraz `package-lock.json`. Generator kopiuje skoroszyt i cały katalog `data/` do wyniku. `dist/` i kopie w `site/public/` są poprawnie ignorowanymi wynikami budowania; `node_modules/` i skrypty narzędziowe nie są częścią artefaktu Pages.
 
 Końcowa kontrola tego pakietu użyła tej samej kolejności co workflow:
 
@@ -150,7 +149,6 @@ Końcowa weryfikacja po przywróceniu CSS:
 | `npm run test:site:unit` | 2 testy, 2 zaliczone, 0 błędów; 75,81 ms |
 | `npm run build` | przygotowano 66 343 wpisy; TypeScript i build poprawne; Vite 105 ms |
 | `npm run test:site:browser` | 11 testów zaliczonych; kontrola powtórzona po zmianie treści i kolumn |
-| `npm run build:poc` | TypeScript i build POC poprawne; Vite 85 ms |
 | `npm run measure:site` | zapisano trzy zimne starty, dziewięć zapytań, 35 kroków przewijania, pamięć obu wątków i pięć zrzutów |
 
 Czasy Vite oznaczają tylko etap bundlowania, nie całe przygotowanie danych i kontrolę typów. Ostrzeżenie środowiska o jednoczesnych `NO_COLOR` i `FORCE_COLOR` nie wpływało na wynik testów.

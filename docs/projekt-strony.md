@@ -104,7 +104,7 @@ Użytkownik zatwierdził HTML/CSS/TypeScript, Vite, MiniSearch i jeden Web Worke
 - MiniSearch do wyszukiwania przybliżonego. Biblioteka obsługuje tolerancję literówek, ograniczanie wyszukiwania do wskazanych pól, konfigurowalne łączenie słów oraz zapis i odczyt indeksu. Dopasowanie możliwości biblioteki do potrzeb projektu było podstawą wyboru; wydajność i jakość wyników wymagają pomiaru. [Dokumentacja MiniSearch](https://lucaong.github.io/minisearch/classes/MiniSearch.MiniSearch.html).
 - Jeden Web Worker do wczytywania i przetwarzania danych, wyszukiwania, filtrowania i sortowania. Worker wykonuje kod poza głównym wątkiem interfejsu. Proponowany podział ma ograniczyć blokowanie interfejsu przez te obliczenia; sam w sobie nie gwarantuje szybkich odpowiedzi ani małego zużycia pamięci. [Dokumentacja Web Workers](https://developer.mozilla.org/en-US/docs/Web/API/Web_Workers_API/Using_web_workers).
 
-Wykonano POC na pełnym zbiorze: [metoda, uruchomienie i wnioski](poc-wyszukiwania.md). Wersje przypięte w plikach pakietów: MiniSearch 7.2.0, Vite 8.2.2, TypeScript 7.0.2. Porównano cztery profile i dwa sposoby łączenia słów. Wyniki ilościowe opisują referencję leksykalną; użytkownik zaakceptował kompromis profilu jednej edycji. Fizyczne telefony i docelowy hosting nie zostały jeszcze zmierzone.
+Wcześniejsze doświadczenie na pełnym zbiorze porównało cztery profile i dwa sposoby łączenia słów. Użytkownik zaakceptował kompromis profilu jednej edycji. Wersje przypięte w plikach pakietów: MiniSearch 7.2.0, Vite 8.2.2, TypeScript 7.0.2. Fizyczne telefony i docelowy hosting nie zostały jeszcze zmierzone.
 
 ## Powiązane dokumenty
 

@@ -11,5 +11,5 @@
     "verbatimModuleSyntax": true,
     "skipLibCheck": true
   },
-  "include": ["poc/**/*.ts", "scripts/*poc.ts", "scripts/ocen-wyszukiwanie.ts", "src/**/*.ts", "site/**/*.ts", "tests/**/*.ts", "scripts/przygotuj-strone.ts", "vite.site.config.ts", "playwright.site.config.ts", "vite.config.ts", "playwright.config.ts"]
+  "include": ["src/**/*.ts", "site/**/*.ts", "tests/**/*.ts", "scripts/dane.ts", "scripts/przygotuj-strone.ts", "vite.site.config.ts", "playwright.site.config.ts"]
 }

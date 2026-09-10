@@ -1,8 +1,8 @@
 import { createHash } from 'node:crypto';
 import { readdir, readFile } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
-import { DATE_FIELDS } from '../poc/search/model.ts';
-import type { Entry } from '../poc/search/model.ts';
+import { DATE_FIELDS } from '../src/search/model.ts';
+import type { Entry } from '../src/search/model.ts';
 
 export const ROOT = fileURLToPath(new URL('../', import.meta.url));
 const CORRECTIONS: Record<string, string> = {

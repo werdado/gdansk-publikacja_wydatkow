@@ -7,15 +7,9 @@
     "node": ">=24.0.0"
   },
   "scripts": {
-    "prepare:poc": "node scripts/przygotuj-poc.ts",
     "prepare:site": "node scripts/przygotuj-strone.ts",
-    "dev:poc": "npm run prepare:poc && vite --host 0.0.0.0",
-    "build:poc": "npm run prepare:poc && npm run typecheck && vite build",
-    "preview:poc": "vite preview --host 0.0.0.0",
-    "evaluate:search": "node --expose-gc scripts/ocen-wyszukiwanie.ts",
     "typecheck": "tsc --noEmit",
-    "test": "node --test poc/tests/search.test.ts",
-    "test:browser": "playwright test",
+    "test": "node --test tests/search.test.ts",
     "dev": "npm run prepare:site && vite --config vite.site.config.ts --host 0.0.0.0",
     "build": "npm run prepare:site && npm run typecheck && vite build --config vite.site.config.ts",
     "preview": "vite preview --config vite.site.config.ts --host 0.0.0.0",

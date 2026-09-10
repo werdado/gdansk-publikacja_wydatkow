@@ -1,10 +1,10 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
 import MiniSearch from 'minisearch';
-import { SearchEngine, INDEX_OPTIONS } from '../search/engine.ts';
-import { normalize } from '../search/model.ts';
-import type { Entry, Query } from '../search/model.ts';
-import { loadSource } from '../../scripts/dane-poc.ts';
+import { SearchEngine, INDEX_OPTIONS } from '../src/search/engine.ts';
+import { normalize } from '../src/search/model.ts';
+import type { Entry, Query } from '../src/search/model.ts';
+import { loadSource } from '../scripts/dane.ts';
 
 const makeRow = (id: string, changes: Partial<Entry>): Entry => ({
   id, sourceYear: 2026, sourcePosition: Number(id.split(':')[1]),

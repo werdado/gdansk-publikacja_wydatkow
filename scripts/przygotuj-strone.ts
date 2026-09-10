@@ -3,7 +3,7 @@ import { copyFile, cp, mkdir, rm, writeFile } from 'node:fs/promises';
 import { gzipSync } from 'node:zlib';
 import MiniSearch from 'minisearch';
 import { INDEX_OPTIONS } from '../src/search/engine.ts';
-import { loadSource, ROOT } from './dane-poc.ts';
+import { loadSource, ROOT } from './dane.ts';
 
 const { rows, sources, corrections } = await loadSource();
 const index = new MiniSearch(INDEX_OPTIONS);
