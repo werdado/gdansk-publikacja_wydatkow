@@ -1,6 +1,9 @@
 name: Publikacja rejestru wydatków
 run-name: Ręczna publikacja rejestru wydatków
 on:
+  push:
+    branches:
+      - master
   workflow_dispatch:
 permissions:
   contents: write
