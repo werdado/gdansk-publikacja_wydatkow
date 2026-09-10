@@ -39,11 +39,15 @@ onmessage = async (event: MessageEvent<Request>) => {
       if (!engine) throw new Error('Dane nie są jeszcze gotowe.');
       current = { requestId: message.requestId, result: engine.search(publicQuery(message.query)) };
       emitPage(0, PAGE_SIZE, 0);
+    } else if (message.type === 'record') {
+      if (!engine) throw new Error('Dane nie są jeszcze gotowe.');
+      send({ type: 'record', linkId: message.linkId, entry: engine.byId.get(message.id) ?? null });
     } else if (current?.requestId === message.requestId) {
       emitPage(message.offset, message.limit, message.windowId);
     }
   } catch (error) {
     send({ type: 'error', requestId: 'requestId' in message ? message.requestId : undefined,
+      linkId: 'linkId' in message ? message.linkId : undefined,
       message: error instanceof Error ? error.message : String(error) });
   }
 };

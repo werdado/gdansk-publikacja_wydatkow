@@ -97,6 +97,31 @@ test('kliknięcie w dowolną komórkę rozwija wpis', async ({ page }) => {
   await row.locator('td').first().click();
   await expect(page.locator('#record-dialog')).toBeVisible();
   await expect(page.locator('#record-title')).toHaveText('Pełny wpis ' + id);
+  expect(new URL(page.url()).hash).toBe('#wpis=' + encodeURIComponent(id!));
+  await expect(page.getByRole('link', { name: 'Stały link do tego wpisu' })).toHaveAttribute('href', page.url());
+
+  await page.reload();
+  await expect(page.locator('html')).toHaveAttribute('data-ready', 'true', { timeout: 60000 });
+  await expect(page.locator('#record-dialog')).toBeVisible();
+  await expect(page.locator('#record-title')).toHaveText('Pełny wpis ' + id);
+
+  await page.goBack();
+  await expect(page.locator('#record-dialog')).not.toBeVisible();
+  expect(new URL(page.url()).hash).toBe('');
+  await page.goForward();
+  await expect(page.locator('#record-dialog')).toBeVisible();
+  await expect(page.locator('#record-title')).toHaveText('Pełny wpis ' + id);
+});
+
+test('stały link otwiera właściwy wpis niezależnie od powtarzającego się numeru umowy', async ({ page }) => {
+  await page.goto('/#wpis=2017%3A1891');
+  await expect(page.locator('html')).toHaveAttribute('data-ready', 'true', { timeout: 60000 });
+  await expect(page.locator('#record-dialog')).toBeVisible();
+  await expect(page.locator('#record-title')).toHaveText('Pełny wpis 2017:1891');
+  await expect(page.locator('#record-fields')).toContainText('7/2017');
+  await page.getByRole('button', { name: 'Zamknij' }).click();
+  await expect(page.locator('#record-dialog')).not.toBeVisible();
+  await expect.poll(() => new URL(page.url()).hash).toBe('');
 });
 test('błąd pobrania nie pokazuje niepełnych wyników', async ({ page }) => {
   await page.context().route('**/generated/manifest.json', route => route.fulfill({ status: 503, body: '' }));

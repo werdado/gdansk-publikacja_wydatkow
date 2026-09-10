@@ -87,5 +87,10 @@ test('wszystkie wpisy, powtarzające się numery i sześć korekt dat', async ()
   assert.equal(source.rows.find(row => row.id === '2020:4659')!.contractStartDate.slice(0, 10), '2020-01-15');
   assert.equal(source.rows.find(row => row.id === '2016:2322')!.contractStartDate.slice(0, 10), '2016-08-26');
   assert.equal(source.rows.find(row => row.id === '2015:2614')!.contractSubject!.length, 4375);
-  assert(new Set(source.rows.map(row => row.contractNumber)).size < source.rows.length);
+  const numberCounts = new Map<string, number>();
+  for (const row of source.rows) numberCounts.set(row.contractNumber, (numberCounts.get(row.contractNumber) ?? 0) + 1);
+  const repeated = [...numberCounts.values()].filter(count => count > 1);
+  assert.equal(numberCounts.size, 66333);
+  assert.equal(repeated.length, 9);
+  assert.equal(repeated.reduce((sum, count) => sum + count, 0), 19);
 });

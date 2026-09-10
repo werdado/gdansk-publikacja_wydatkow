@@ -23,15 +23,15 @@ export function openRecord(entry: Entry) {
     const value = document.createElement('dd'); value.textContent = display(entry, field);
     fields.append(label, value);
   }
-  dialog.showModal();
+  if (!dialog.open) dialog.showModal();
 }
-export function renderRow(entry: Entry, index: number): HTMLTableRowElement {
+export function renderRow(entry: Entry, index: number, onOpen = openRecord): HTMLTableRowElement {
   const row = document.createElement('tr');
   row.className = 'entry-row'; row.dataset.id = entry.id;
   row.setAttribute('aria-rowindex', String(index + 3));
   row.addEventListener('click', event => {
     if (event.target instanceof Element && event.target.closest('button')) return;
-    openRecord(entry);
+    onOpen(entry);
   });
   for (const field of TABLE_COLUMNS) {
     const cell = document.createElement('td');
@@ -43,7 +43,7 @@ export function renderRow(entry: Entry, index: number): HTMLTableRowElement {
       const button = document.createElement('button');
       button.type = 'button'; button.textContent = 'Rozwiń wpis';
       button.setAttribute('aria-label', 'Rozwiń wpis ' + entry.id);
-      button.addEventListener('click', () => openRecord(entry)); box.append(button);
+      button.addEventListener('click', () => onOpen(entry)); box.append(button);
     }
     cell.append(box); row.append(cell);
   }

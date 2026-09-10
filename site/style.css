@@ -92,6 +92,7 @@ dialog::backdrop { background: rgb(0 0 0 / 35%); backdrop-filter: blur(3px); }
 .dialog-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
 .dialog-top .eyebrow { margin: 0; }
 dialog h2 { font: 400 28px/1.2 Georgia, serif; letter-spacing: -1px; }
+.record-link { color: var(--accent); text-decoration: underline; text-underline-offset: 3px; }
 dialog dd { margin: 6px 0 18px; white-space: pre-wrap; overflow-wrap: anywhere; }
 dialog dt { font-size: 10px; text-transform: uppercase; letter-spacing: .06em; color: var(--muted); font-weight: 650; }
 @media (max-width: 900px) {

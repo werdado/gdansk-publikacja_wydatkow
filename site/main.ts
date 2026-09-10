@@ -4,7 +4,7 @@ import { LABELS, normalize } from '../src/search/model.ts';
 import type { Entry, Filters, Result } from '../src/search/model.ts';
 import type { PublicQuery } from '../src/search/public-query.ts';
 import type { Request, Response } from '../src/search/protocol.ts';
-import { TABLE_COLUMNS, renderRow } from '../src/ui/record.ts';
+import { TABLE_COLUMNS, openRecord, renderRow } from '../src/ui/record.ts';
 import { windowFor } from '../src/ui/window.ts';
 
 function get<T extends HTMLElement = HTMLElement>(id: string): T {
@@ -20,6 +20,8 @@ const body = get('results');
 const status = get('status');
 const more = get<HTMLButtonElement>('more');
 const tableScroll = document.querySelector<HTMLElement>('.table-scroll')!;
+const dialog = get<HTMLDialogElement>('record-dialog');
+const recordLink = get<HTMLAnchorElement>('record-link');
 const integer = new Intl.NumberFormat('pl-PL');
 const textFields = ['contractorName', 'contractSubject', 'contractNumber'] as const;
 const dateFields = ['contractDate'] as const;
@@ -29,9 +31,40 @@ let sort: NonNullable<PublicQuery['sort']> = { field: 'contractDate', direction:
 let worker: Worker | undefined;
 let ready = false, waiting = false, queryPending = true;
 let requestId = 0, windowId = 0, total = 0;
+let linkId = 0, closingFromNavigation = false;
 let bounds = { start: 0, end: 0, visible: 0, top: 0, bottom: 0 };
 let timer: ReturnType<typeof setTimeout> | undefined;
 const send = (message: Request) => worker!.postMessage(message);
+
+function linkedRecordId(): string | null {
+  return new URLSearchParams(location.hash.slice(1)).get('wpis');
+}
+function recordUrl(id: string): URL {
+  const url = new URL(location.href);
+  url.hash = new URLSearchParams({ wpis: id }).toString();
+  return url;
+}
+function closeRecordFromNavigation() {
+  if (!dialog.open) return;
+  closingFromNavigation = true;
+  dialog.close();
+  closingFromNavigation = false;
+}
+function showRecord(entry: Entry, addHistory = true) {
+  linkId++;
+  const url = recordUrl(entry.id);
+  recordLink.href = url.href;
+  if (addHistory && linkedRecordId() !== entry.id) {
+    history.pushState({ ...history.state, recordDialog: true }, '', url);
+  }
+  openRecord(entry);
+}
+function syncRecordFromUrl() {
+  const id = linkedRecordId();
+  linkId++;
+  if (!id) { closeRecordFromNavigation(); return; }
+  if (ready) send({ type: 'record', linkId, id });
+}
 
 function textControl(id: string, label: string, type = 'search') {
   const control = document.createElement('input');
@@ -179,7 +212,7 @@ function renderWindow(rows: Entry[], offset: number) {
   }
   if (bounds.top) spacer(bounds.top);
   for (const [index, entry] of rows.entries()) {
-    const row = renderRow(entry, offset + index);
+    const row = renderRow(entry, offset + index, showRecord);
     if (entry.id === focusedId) focusedButton = row.querySelector('button');
     fragment.append(row);
   }
@@ -216,7 +249,17 @@ function start() {
     const message = event.data;
     if (message.type === 'ready') {
       get('collection-count').textContent = integer.format(message.count);
-      ready = true; controls.disabled = false; run(); return;
+      ready = true; controls.disabled = false; run(); syncRecordFromUrl(); return;
+    }
+    if (message.type === 'record') {
+      if (message.linkId !== linkId) return;
+      if (message.entry) showRecord(message.entry, false);
+      else { closeRecordFromNavigation(); status.textContent = 'Nie znaleziono wskazanego wpisu.'; }
+      return;
+    }
+    if (message.type === 'error' && message.linkId !== undefined) {
+      if (message.linkId === linkId) status.textContent = 'Nie udało się wczytać wskazanego wpisu.';
+      return;
     }
     if ('requestId' in message && message.requestId !== undefined && message.requestId !== requestId) return;
     if (message.type === 'error') { fail(); return; }
@@ -255,4 +298,13 @@ get('retry').addEventListener('click', start);
 more.addEventListener('click', () => updateWindow(PAGE_SIZE));
 tableScroll.addEventListener('scroll', () => updateWindow(), { passive: true });
 window.addEventListener('resize', () => updateWindow());
+window.addEventListener('hashchange', syncRecordFromUrl);
+dialog.addEventListener('close', () => {
+  if (closingFromNavigation || !linkedRecordId()) return;
+  if (history.state?.recordDialog) history.back();
+  else {
+    const url = new URL(location.href); url.hash = '';
+    history.replaceState(history.state, '', url);
+  }
+});
 start();

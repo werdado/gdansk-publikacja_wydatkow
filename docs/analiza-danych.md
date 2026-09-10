@@ -46,7 +46,7 @@ Każdy wpis zawiera te same 11 pól. Polskie etykiety kolumn w źródle są iden
 
 - Data zawarcia każdego wpisu przypada na rok wskazany w nazwie pliku źródłowego. Daty obowiązywania i lata występujące w numerach umów mogą być inne.
 - Opublikowana etykieta kwoty to „poniesione wydatki”. Dostarczone dane nie określają przypisania płatności do lat ani nie wskazują wprost waluty w metadanych pola. Konwersja powinna zachować znaczenie źródłowe.
-- Nie ma identycznych wpisów ani w obrębie plików, ani między plikami. Numery umów nie są unikalne: liczba wystąpień ponad pierwsze w obrębie danego roku wynosi łącznie 10 (2015: 1; 2016: 1; 2017: 2; 2018: 2; 2019: 1; 2026: 3). Usunięcie powtórzeń według numeru umowy oznaczałoby utratę odrębnych wpisów.
+- Nie ma identycznych wpisów ani w obrębie plików, ani między plikami. Numery umów nie są unikalne: 9 numerów powtarza się w 19 wpisach (10 wystąpień ponad pierwsze; 2015: 1; 2016: 1; 2017: 2; 2018: 2; 2019: 1; 2026: 3). Usunięcie powtórzeń według numeru umowy oznaczałoby utratę odrębnych wpisów. Stałe odnośniki strony używają dlatego jednoznacznego identyfikatora `rok:pozycja`, na przykład `#wpis=2026%3A302`.
 - Jeden wydział urzędu i jeden przedmiot umowy mają wartość `null`. Nie ma brakujących kluczy ani pustych ciągów tekstowych.
 - Wszystkie kwoty wydatków są liczbami dodatnimi.
 - 17 413 kwot ma w zapisie źródłowym więcej niż dwa miejsca po przecinku, np. `1266.9000000000001` i `3934857.6899999999`. Największa różnica względem zaokrąglenia do dwóch miejsc wynosi `0,00000005` (wartość źródłowa: `870494833.67999995`). Zapis jest zgodny z efektem reprezentacji zmiennoprzecinkowej. Użytkownik zatwierdził zapis kwot w skoroszycie jako liczb zaokrąglonych do dwóch miejsc po przecinku.
