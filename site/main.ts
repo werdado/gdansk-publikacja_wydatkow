@@ -243,7 +243,7 @@ function fail() {
 function start() {
   worker?.terminate(); invalidate(); ready = false; controls.disabled = true;
   get('retry').hidden = true; status.textContent = 'Wczytywanie danych…';
-  const active = new Worker(new URL('../src/search/worker.ts', import.meta.url), { type: 'module' });
+  const active = new Worker(new URL('../src/search/worker.ts', import.meta.url));
   worker = active;
   active.onerror = () => { if (worker === active) fail(); };
   active.onmessage = (event: MessageEvent<Response>) => {

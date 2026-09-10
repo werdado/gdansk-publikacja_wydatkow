@@ -91,6 +91,23 @@ test('wąski ekran i pełny długi opis', async ({ page }) => {
   await expect(page.locator('#record-dialog')).not.toBeVisible();
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
 });
+
+test('wąski ekran działa bez obsługi workerów modułowych', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.addInitScript(() => {
+    const NativeWorker = window.Worker;
+    window.Worker = new Proxy(NativeWorker, {
+      construct(Target, args: ConstructorParameters<typeof Worker>) {
+        if (args[1]?.type === 'module') throw new DOMException('Module workers are not supported.');
+        return Reflect.construct(Target, args);
+      },
+    });
+  });
+  await page.goto('/');
+  await expect(page.locator('html')).toHaveAttribute('data-ready', 'true', { timeout: 10000 });
+  await expect(page.locator('#query')).toBeEnabled();
+});
+
 test('kliknięcie w dowolną komórkę rozwija wpis', async ({ page }) => {
   await ready(page);
   const row = page.locator('tr.entry-row').first();
