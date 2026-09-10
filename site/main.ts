@@ -222,8 +222,10 @@ function renderWindow(rows: Entry[], offset: number) {
 }
 function updateWindow(extra = 0) {
   if (!ready || queryPending || waiting) return;
-  const viewport = Math.max(0, tableScroll.clientHeight - document.querySelector('thead')!.clientHeight);
-  const next = windowFor(tableScroll.scrollTop, viewport, total, Math.min(total, bounds.visible + extra));
+  const tableTop = window.scrollY + tableScroll.getBoundingClientRect().top;
+  const headHeight = document.querySelector('thead')!.getBoundingClientRect().height;
+  const scrollTop = Math.max(0, window.scrollY - tableTop - headHeight);
+  const next = windowFor(scrollTop, window.innerHeight, total, Math.min(total, bounds.visible + extra));
   if (next.start === bounds.start && next.end === bounds.end && next.visible === bounds.visible) return;
   bounds = next; waiting = true; more.disabled = true; windowId++;
   body.setAttribute('aria-busy', 'true');
@@ -267,7 +269,10 @@ function start() {
     if (message.windowId === 0) {
       total = message.total;
       bounds = { start: 0, end: message.rows.length, visible: Math.min(PAGE_SIZE, total), top: 0, bottom: 0 };
-      facets = message.facets; renderFacets(); tableScroll.scrollTop = 0; queryPending = false;
+      facets = message.facets; renderFacets();
+      const tableTop = window.scrollY + tableScroll.getBoundingClientRect().top;
+      if (window.scrollY > tableTop) window.scrollTo({ top: tableTop });
+      queryPending = false;
     }
     waiting = false;
     renderWindow(message.rows, message.offset);
@@ -296,7 +301,7 @@ form.addEventListener('change', event => {
 get('clear').addEventListener('click', () => { form.reset(); departments.clear(); run(); });
 get('retry').addEventListener('click', start);
 more.addEventListener('click', () => updateWindow(PAGE_SIZE));
-tableScroll.addEventListener('scroll', () => updateWindow(), { passive: true });
+window.addEventListener('scroll', () => updateWindow(), { passive: true });
 window.addEventListener('resize', () => updateWindow());
 window.addEventListener('hashchange', syncRecordFromUrl);
 dialog.addEventListener('close', () => {

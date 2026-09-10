@@ -19,8 +19,9 @@ test('pełny zbiór, stałe ustawienia i dwie kolumny', async ({ page }) => {
   await expect(page.getByText('GDAŃSK. Rejestr wydatków', { exact: true })).toBeVisible();
   await expect(page.getByRole('heading', { name: 'Wydatki — jawne nawet gdy ukryte.' })).toBeVisible();
   await expect(page.getByText('Rejestr wydatków Gdańska z lat 2015-2026, ukryty w lipcu 2026.', { exact: false })).toBeVisible();
-  await expect(page.getByText('Strona obejmuje dane usunięte z Biuletynu Informacji Publicznej Miasta Gdańska w lipcu 2026.', { exact: false })).toBeVisible();
-  await expect(page.getByRole('link', { name: 'https://rejestrumow.gov.pl/' })).toHaveCount(2);
+  await expect(page.locator('footer')).toHaveCount(0);
+  await expect(page.getByRole('link', { name: 'https://rejestrumow.gov.pl/' })).toHaveCount(1);
+  await expect(page.locator('.table-scroll')).toHaveCSS('max-height', 'none');
   await expect(page.getByRole('link', { name: 'Pobierz dane w formie Excel' })).toHaveAttribute('href', './wydatki-gdanska_2015-2026.xlsx');
   await expect(page.getByRole('link', { name: 'Pobierz źródłowe pliki JSON' })).toHaveAttribute('href', './data/index.html');
   const excel = await page.request.get('/wydatki-gdanska_2015-2026.xlsx');
@@ -135,12 +136,12 @@ test('długie przewijanie nie gromadzi wszystkich wierszy', async ({ page }) => 
   await ready(page);
   const first = await page.locator('tr.entry-row').first().getAttribute('data-id');
   for (let step = 0; step < 35; step++) {
-    const previousHeight = await page.locator('.table-scroll').evaluate(element => element.scrollHeight);
-    await page.locator('.table-scroll').evaluate(element => { element.scrollTop = element.scrollHeight; });
-    await expect.poll(() => page.locator('.table-scroll').evaluate(element => element.scrollHeight)).toBeGreaterThan(previousHeight);
+    const previousHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight)).toBeGreaterThan(previousHeight);
     expect(await page.locator('tr.entry-row').count()).toBeLessThanOrEqual(300);
   }
-  await page.locator('.table-scroll').evaluate(element => { element.scrollTop = 0; });
+  await page.locator('.table-scroll').evaluate(element => window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY));
   await expect(page.locator('tr.entry-row').first()).toHaveAttribute('data-id', first!);
   await expect(page.locator('#count')).toHaveAttribute('data-total', '66343');
 });

@@ -133,12 +133,12 @@ try {
   const first = await page.locator('tr.entry-row').first().getAttribute('data-id');
   const scroll = [];
   for (let step = 0; step < 35; step++) {
-    const previousHeight = await page.locator('.table-scroll').evaluate(element => element.scrollHeight);
-    await page.locator('.table-scroll').evaluate(element => { element.scrollTop = element.scrollHeight; });
-    await expect.poll(() => page.locator('.table-scroll').evaluate(element => element.scrollHeight)).toBeGreaterThan(previousHeight);
+    const previousHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight)).toBeGreaterThan(previousHeight);
     const sample = await page.evaluate(() => ({
       rows: document.querySelectorAll('tr.entry-row').length,
-      height: document.querySelector('.table-scroll').scrollHeight,
+      height: document.documentElement.scrollHeight,
       firstIndex: Number(document.querySelector('tr.entry-row').getAttribute('aria-rowindex')) - 2,
       lastIndex: Number([...document.querySelectorAll('tr.entry-row')].at(-1).getAttribute('aria-rowindex')) - 2,
       rowHeights: [...new Set([...document.querySelectorAll('tr.entry-row')].map(row => row.getBoundingClientRect().height))],
@@ -148,7 +148,7 @@ try {
     scroll.push(sample);
   }
   const afterMemory = await memory();
-  await page.locator('.table-scroll').evaluate(element => { element.scrollTop = 0; });
+  await page.locator('.table-scroll').evaluate(element => window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY));
   await expect(page.locator('tr.entry-row').first()).toHaveAttribute('data-id', first);
   const restoredFirst = await page.locator('tr.entry-row').first().getAttribute('data-id');
   await page.screenshot({ path: output + '/strona-desktop.png', fullPage: true });

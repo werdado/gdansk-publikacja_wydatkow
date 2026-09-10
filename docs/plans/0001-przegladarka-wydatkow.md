@@ -360,7 +360,7 @@ Okno obejmuje najwyżej trzy partie, a nie wszystkie wcześniej obejrzane wpisy.
       </div>
       <p id="search-note" class="note">Każde słowo musi pasować. Pomijamy wielkość liter i polskie znaki. W opisach, trybach, rodzajach i nazwach kontrahentów uwzględniamy jedną literówkę od czterech znaków.</p>
       <p id="count" aria-live="polite"></p>
-      <div class="table-scroll" tabindex="0" role="region" aria-label="Wyniki — tabela przewijana pionowo i poziomo">
+      <div class="table-scroll" tabindex="0" role="region" aria-label="Wyniki — tabela przewijana poziomo">
         <table>
           <caption class="visually-hidden">Wpisy rejestru wydatków</caption>
           <thead><tr id="headings"></tr><tr id="filter-head"></tr></thead>
@@ -371,10 +371,6 @@ Okno obejmuje najwyżej trzy partie, a nie wszystkie wcześniej obejrzane wpisy.
       <button id="more" type="button" hidden>Pokaż kolejne 100 wpisów</button>
     </fieldset>
   </form>
-  <footer>
-    <p>Każdy wiersz odpowiada jednemu wpisowi źródłowemu. Rok 2026 obejmuje publikację do 29 lipca. Kwoty opisują poniesione wydatki.</p>
-    <p>Poprawiono sześć oczywistych literówek w latach dat, zgodnie z analizą plików źródłowych. Pełne opisy zachowano, również gdy zawierają fragmenty innych wpisów.</p>
-  </footer>
 </main>
 <dialog id="record-dialog" aria-labelledby="record-title">
   <form method="dialog"><button autofocus>Zamknij</button></form>
@@ -586,8 +582,10 @@ function renderWindow(rows: Entry[], offset: number) {
 }
 function updateWindow(extra = 0) {
   if (!ready || queryPending || waiting) return;
-  const viewport = Math.max(0, tableScroll.clientHeight - document.querySelector('thead')!.clientHeight);
-  const next = windowFor(tableScroll.scrollTop, viewport, total, Math.min(total, bounds.visible + extra));
+  const tableTop = window.scrollY + tableScroll.getBoundingClientRect().top;
+  const headHeight = document.querySelector('thead')!.getBoundingClientRect().height;
+  const scrollTop = Math.max(0, window.scrollY - tableTop - headHeight);
+  const next = windowFor(scrollTop, window.innerHeight, total, Math.min(total, bounds.visible + extra));
   if (next.start === bounds.start && next.end === bounds.end && next.visible === bounds.visible) return;
   bounds = next; waiting = true; more.disabled = true; windowId++;
   body.setAttribute('aria-busy', 'true');
@@ -620,7 +618,10 @@ function start() {
     if (message.windowId === 0) {
       total = message.total;
       bounds = { start: 0, end: message.rows.length, visible: Math.min(100, total), top: 0, bottom: 0 };
-      facets = message.facets; renderFacets(); tableScroll.scrollTop = 0; queryPending = false;
+      facets = message.facets; renderFacets();
+      const tableTop = window.scrollY + tableScroll.getBoundingClientRect().top;
+      if (window.scrollY > tableTop) window.scrollTo({ top: tableTop });
+      queryPending = false;
     }
     waiting = false;
     renderWindow(message.rows, message.offset);
@@ -649,7 +650,7 @@ form.addEventListener('change', event => {
 get('clear').addEventListener('click', () => { form.reset(); departments.clear(); run(); });
 get('retry').addEventListener('click', start);
 more.addEventListener('click', () => updateWindow(100));
-tableScroll.addEventListener('scroll', () => updateWindow(), { passive: true });
+window.addEventListener('scroll', () => updateWindow(), { passive: true });
 window.addEventListener('resize', () => updateWindow());
 start();
 ~~~
@@ -803,12 +804,12 @@ test('długie przewijanie nie gromadzi wszystkich wierszy', async ({ page }) => 
   await ready(page);
   const first = await page.locator('tr.entry-row').first().getAttribute('data-id');
   for (let step = 0; step < 35; step++) {
-    const previousHeight = await page.locator('.table-scroll').evaluate(element => element.scrollHeight);
-    await page.locator('.table-scroll').evaluate(element => { element.scrollTop = element.scrollHeight; });
-    await expect.poll(() => page.locator('.table-scroll').evaluate(element => element.scrollHeight)).toBeGreaterThan(previousHeight);
+    const previousHeight = await page.evaluate(() => document.documentElement.scrollHeight);
+    await page.evaluate(() => window.scrollTo(0, document.documentElement.scrollHeight));
+    await expect.poll(() => page.evaluate(() => document.documentElement.scrollHeight)).toBeGreaterThan(previousHeight);
     expect(await page.locator('tr.entry-row').count()).toBeLessThanOrEqual(300);
   }
-  await page.locator('.table-scroll').evaluate(element => { element.scrollTop = 0; });
+  await page.locator('.table-scroll').evaluate(element => window.scrollTo(0, element.getBoundingClientRect().top + window.scrollY));
   await expect(page.locator('tr.entry-row').first()).toHaveAttribute('data-id', first!);
   await expect(page.locator('#count')).toHaveAttribute('data-total', '66343');
 });
