@@ -1,5 +1,5 @@
 name: Publikacja rejestru wydatków
-run-name: Ręczna publikacja rejestru wydatków
+run-name: Publikacja rejestru wydatków
 on:
   push:
     branches:
