@@ -25,9 +25,19 @@ jobs:
       - run: npm run build
       - run: npx playwright install --with-deps chromium
       - run: npm run test:site:browser
+
       - name: Opublikuj stronę w gałęzi gh_pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           publish_branch: gh_pages
           publish_dir: ./dist
+
+      - name: Opublikuj stronę w repozytorium dane.werdado.pl
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          external_repository: werdado/dane.werdado.pl
+          publish_branch: main
+          publish_dir: ./dist
+          destination_dir: gdansk/rejestr-wydatkow
